@@ -327,6 +327,15 @@ if ( ! class_exists( 'SilverWp\Db\Query' ) ) {
 		}
 
 		/**
+		 * Get post type class handler or name
+		 *
+		 * @return PostTypeAbstract|string
+		 * @access public
+		 */
+		public function getPostType() {
+			return $this->post_type;
+		}
+		/**
 		 * Get single meta box by name
 		 *
 		 * @param string $control_name meta box form control name
