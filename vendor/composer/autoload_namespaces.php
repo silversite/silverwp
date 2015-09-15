@@ -6,5 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'ZendService' => array($vendorDir . '/zendframework/zendservice-recaptcha/library'),
     'Less' => array($vendorDir . '/oyejorge/less.php/lib'),
 );

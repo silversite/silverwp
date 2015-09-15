@@ -6,7 +6,20 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Zend\\Version\\' => array($vendorDir . '/zendframework/zend-version/src'),
+    'Zend\\Validator\\' => array($vendorDir . '/zendframework/zend-validator/src'),
+    'Zend\\Uri\\' => array($vendorDir . '/zendframework/zend-uri/src'),
+    'Zend\\Stdlib\\' => array($vendorDir . '/zendframework/zend-stdlib/src'),
+    'Zend\\ServiceManager\\' => array($vendorDir . '/zendframework/zend-servicemanager/src'),
+    'Zend\\Loader\\' => array($vendorDir . '/zendframework/zend-loader/src'),
+    'Zend\\Json\\' => array($vendorDir . '/zendframework/zend-json/src'),
+    'Zend\\InputFilter\\' => array($vendorDir . '/zendframework/zend-inputfilter/src'),
+    'Zend\\I18n\\' => array($vendorDir . '/zendframework/zend-i18n/src'),
+    'Zend\\Http\\' => array($vendorDir . '/zendframework/zend-http/src'),
+    'Zend\\Filter\\' => array($vendorDir . '/zendframework/zend-filter/src'),
+    'Zend\\Escaper\\' => array($vendorDir . '/zendframework/zend-escaper/src'),
     'SilverWp\\' => array($baseDir . '/SilverWp'),
     'Leafo\\ScssPhp\\' => array($vendorDir . '/leafo/scssphp/src'),
+    'Interop\\Container\\' => array($vendorDir . '/container-interop/container-interop/src/Interop/Container'),
     'Abraham\\TwitterOAuth\\' => array($vendorDir . '/abraham/twitteroauth/src'),
 );

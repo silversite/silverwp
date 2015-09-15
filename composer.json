@@ -22,12 +22,21 @@
     "silverwp",
     "wp"
   ],
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "http://packages.zendframework.com/"
+    }
+  ],
   "require": {
     "php": ">=5.3",
     "aristath/kirki": "1.*",
     "leafo/scssphp": "^0.1.8",
     "pluswp/wp-scss": "@stable",
-    "abraham/twitteroauth": "^0.6.0"
+    "abraham/twitteroauth": "^0.6.0",
+    "zendframework/zend-inputfilter": "^2.5",
+    "zendframework/zend-servicemanager": "^2.6",
+    "zendframework/zend-i18n": "^2.5"
   },
   "autoload": {
     "files": [
