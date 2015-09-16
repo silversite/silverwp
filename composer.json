@@ -31,12 +31,18 @@
   "require": {
     "php": ">=5.3",
     "aristath/kirki": "1.*",
+<<<<<<< HEAD
     "leafo/scssphp": "^0.1.8",
     "pluswp/wp-scss": "@stable",
     "abraham/twitteroauth": "^0.6.0",
     "zendframework/zend-inputfilter": "^2.5",
     "zendframework/zend-servicemanager": "^2.6",
     "zendframework/zend-i18n": "^2.5"
+=======
+    "leafo/scssphp": "dev-master",
+    "pluswp/wp-scss": "^1.7",
+    "abraham/twitteroauth": "^0.6.0"
+>>>>>>> f7448aa268b98df522605fcc903422f5f00fb88b
   },
   "autoload": {
     "files": [

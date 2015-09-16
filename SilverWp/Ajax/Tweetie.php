@@ -18,6 +18,7 @@
  */
 namespace SilverWp\Ajax;
 
+use SilverWp\Debug;
 use SilverWp\Helper\Option;
 use Abraham\TwitterOAuth\TwitterOAuth;
 
@@ -101,8 +102,14 @@ if ( class_exists( '\Abraham\TwitterOAuth\TwitterOAuth' )
 				$url = '/statuses/user_timeline';
 			}
 
-			$tweets = $connection->get( $url, $params );
-			$this->responseJson( $tweets );
+			$response = $connection->get( $url, $params );
+			//$this->responseJson( $response );
+
+			$this->responseHtml(
+				array(
+					'response' => $response,
+				)
+			);
 		}
 	}
 }
