@@ -270,6 +270,18 @@ if ( ! class_exists( 'SilverWp\Db\Query' ) ) {
 			return $like_count;
 		}
 
+		/**
+		 * Get like link
+		 *
+		 * @return string
+		 * @access public
+		 */
+		public function getLikeLink() {
+			$post_like  = PostLike::getInstance();
+			$like_link = $post_like->getPostLikeLink( $this->getPostId() );
+
+			return $like_link;
+		}
 
 		/**
 		 * Get Post Id
