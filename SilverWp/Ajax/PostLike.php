@@ -336,10 +336,10 @@ if ( ! class_exists( '\SilverWp\PostLike' ) ) {
 		 *
 		 * Test if user already liked post
 		 *
-		 * @access protected
+		 * @access public
 		 * @return boolean
 		 */
-		protected function alreadyLiked() {
+		public function alreadyLiked() {
 			if ( \is_user_logged_in() ) { // user is logged in
 
 				$user_id     = \get_current_user_id(); // current user
@@ -407,8 +407,7 @@ if ( ! class_exists( '\SilverWp\PostLike' ) ) {
 		 */
 		public function getPostLikeLink( $post_id ) {
 			$this->post_id = $post_id;
-			$like_count    = $this->getPostMeta( '_post_like_count',
-				true ); // get post likes
+			$post_meta = \get_post_meta( $this->post_id, '_post_like_count', true );
 			$count         = empty( $like_count ) ? 0 : $like_count;
 			if ( $this->alreadyLiked() ) {
 				$button = Translate::translate( 'Unlike' );
