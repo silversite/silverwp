@@ -331,7 +331,7 @@ if ( ! class_exists( 'SilverWp\Pager\Pager' ) ) {
 		 * @access public
 		 */
 		public function fixUrl( $link ) {
-			return str_replace( '#038;', '&', $link );
+			return str_replace( array( '#038;', '&&' ), '&', $link );
 		}
 
 		/**

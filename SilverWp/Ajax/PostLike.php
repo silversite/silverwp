@@ -138,7 +138,7 @@ if ( ! class_exists( '\SilverWp\PostLike' ) ) {
 		 *
 		 * @param int                     $post_like_count post like count
 		 *
-		 * @global \SilverWpAddons\object $current_user
+		 * @global object $current_user
 		 */
 		protected function userLoggedLike( $post_like_count ) {
 			global $current_user;

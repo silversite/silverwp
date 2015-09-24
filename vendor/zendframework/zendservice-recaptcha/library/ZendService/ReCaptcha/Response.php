@@ -10,7 +10,6 @@
 
 namespace ZendService\ReCaptcha;
 
-use SilverWp\Debug;
 use Zend\Http\Response as HTTPResponse;
 
 /**
@@ -22,12 +21,7 @@ use Zend\Http\Response as HTTPResponse;
  */
 class Response
 {
-	const MISSING_SECRET            = 'missing-input-secret';
-	const INVALID_SECRET     = 'invalid-input-secret';
-	const MISSING_RESPONSE   = 'missing-input-response';
-	const INVALID_MX_RECORD  = 'invalid-input-response';
-
-	/**
+    /**
      * Status
      *
      * true if the response is valid or false otherwise
@@ -45,18 +39,6 @@ class Response
      * @var string
      */
     protected $errorCode = null;
-
-	protected $messageTemplates = [
-//		self::MISSING_SECRET            => "Invalid type given. String expected",
-//		self::INVALID_FORMAT     => "The input is not a valid email address. Use the basic format local-part@hostname",
-//		self::INVALID_HOSTNAME   => "'%hostname%' is not a valid hostname for the email address",
-//		self::INVALID_MX_RECORD  => "'%hostname%' does not appear to have any valid MX or A records for the email address",
-//		self::INVALID_SEGMENT    => "'%hostname%' is not in a routable network segment. The email address should not be resolved from public network",
-//		self::DOT_ATOM           => "'%localPart%' can not be matched against dot-atom format",
-//		self::QUOTED_STRING      => "'%localPart%' can not be matched against quoted-string format",
-//		self::INVALID_LOCAL_PART => "'%localPart%' is not a valid local part for the email address",
-//		self::LENGTH_EXCEEDED    => "The input exceeds the allowed length",
-	];
 
     /**
      * Class constructor used to construct a response
@@ -146,12 +128,11 @@ class Response
     {
         $body = $response->getBody();
 
-        $parse = \Zend\Json\Json::decode($response->getBody());
-	    $this->setStatus($parse->success);
-	    if (!$parse->success) {
-	        if (isset($parse->{'error-codes'})) {
-		        $this->setErrorCode($parse->{'error-codes'}[0]);
-	        }
+        $parse = \Zend\Json\Json::decode($body);
+
+        $this->setStatus($parse->success);
+        if (!$parse->success && isset($parse->{'error-codes'})) {
+            $this->setErrorCode($parse->{'error-codes'});
         }
 
         return $this;

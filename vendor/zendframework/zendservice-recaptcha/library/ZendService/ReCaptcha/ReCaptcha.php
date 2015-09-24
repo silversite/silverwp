@@ -435,10 +435,10 @@ HTML;
             )
         );
 
-        $postParams = array(
-	        'secret'   => $this->secretKey,
-	        'response' => $responseField
-        );
+	    $postParams = array(
+		    'secret'   => $this->secretKey,
+		    'response' => $responseField
+	    );
 
         if ($this->ip !== null) {
             $postParams['remoteip'] = $this->ip;
