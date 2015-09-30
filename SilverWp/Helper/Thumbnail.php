@@ -247,43 +247,46 @@ class Thumbnail {
 	 *
 	 * @access public
 	 * @static
+	 * @return int|bool
 	 */
-	public static function addImage( $post_id, $filename, $is_featured = false
-	) {
+	public static function addImage( $post_id, $filename, $is_featured = false ) {
 		require_once( ABSPATH . 'wp-admin/includes/image.php' );
 		require_once( ABSPATH . 'wp-admin/includes/file.php' );
 		require_once( ABSPATH . 'wp-admin/includes/media.php' );
 
+		$base_name = basename( $filename );
 		// Check the type of tile. We'll use this as the 'post_mime_type'.
-		$filetype = \wp_check_filetype( basename( $filename ), null );
+		$file_type = wp_check_filetype( $base_name, null );
 
 		// Get the path to the upload directory.
-		$wp_upload_dir = \wp_upload_dir();
-
+		$wp_upload_dir = wp_upload_dir();
 		// Prepare an array of post data for the attachment.
 		$attachment = array(
-			'guid'           => $wp_upload_dir['url'] . '/'
-			                    . basename( $filename ),
-			'post_mime_type' => $filetype['type'],
-			'post_title'     => \preg_replace( '/\.[^.]+$/', '',
-				basename( $filename ) ),
+			'guid'           => $wp_upload_dir['url'] . '/' . $base_name,
+			'post_mime_type' => $file_type['type'],
+			'post_title'     => \preg_replace( '/\.[^.]+$/', '', $base_name ),
 			'post_content'   => '',
 			'post_status'    => 'inherit'
 		);
 
 		// Insert the attachment.
-		$attach_id = \wp_insert_attachment( $attachment, $filename, $post_id );
-		// Make sure that this file is included, as wp_generate_attachment_metadata() depends on it.
-		require_once( ABSPATH . 'wp-admin/includes/image.php' );
+		$attach_id = wp_insert_attachment( $attachment, $filename, $post_id );
+		if ( $attach_id ) {
+			// Make sure that this file is included, as wp_generate_attachment_metadata() depends on it.
+			require_once( ABSPATH . 'wp-admin/includes/image.php' );
 
-		// Generate the metadata for the attachment, and update the database record.
-		$attach_data = \wp_generate_attachment_metadata( $attach_id,
-			$filename );
-		\wp_update_attachment_metadata( $attach_id, $attach_data );
+			// Generate the metadata for the attachment, and update the database record.
+			$attach_data = wp_generate_attachment_metadata( $attach_id, $filename );
+			wp_update_attachment_metadata( $attach_id, $attach_data );
 
-		if ( $is_featured ) {
-			\set_post_thumbnail( $post_id, $attach_id );
+			if ( $is_featured ) {
+				set_post_thumbnail( $post_id, $attach_id );
+			}
+
+			return $attach_id;
 		}
+
+		return false;
 	}
 
 	/**
