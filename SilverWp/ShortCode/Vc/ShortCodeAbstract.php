@@ -19,25 +19,26 @@
 
 namespace SilverWp\ShortCode\Vc;
 
-use SilverWp\CoreInterface;
 use SilverWp\Debug;
 use SilverWp\Helper\Control\ControlInterface;
+use SilverWp\Interfaces\Core;
 use SilverWp\ShortCode\Vc\View\ViewAbstract;
 use SilverWp\SingletonAbstract;
 
 if ( ! class_exists( '\SilverWp\ShortCode\Vc\ShortCodeAbstract' ) ) {
 
-    /**
-     * Base visual composer short code class
-     *
-     * @category WordPress
-     * @package SilverWp
-     * @subpackage ShortCode\Vc
-     * @author Michal Kalkowski <michal at silversite.pl>
-     * @copyright Dynamite-Studio.pl & silversite.pl 2015
-     * @version $Revision:$
-     */
-    abstract class ShortCodeAbstract extends \SilverWp\ShortCode\ShortCodeAbstract implements CoreInterface {
+	/**
+	 * Base visual composer short code class
+	 *
+	 * @category   WordPress
+	 * @package    SilverWp
+	 * @subpackage ShortCode\Vc
+	 * @author     Michal Kalkowski <michal at silversite.pl>
+	 * @copyright  SilverSite.pl (c) 2015
+	 * @version    $Revision:$
+	 */
+	abstract class ShortCodeAbstract
+		extends \SilverWp\ShortCode\ShortCodeAbstract implements Core {
         /**
          *
          * Setting handler
@@ -55,8 +56,24 @@ if ( ! class_exists( '\SilverWp\ShortCode\Vc\ShortCodeAbstract' ) ) {
          */
         protected $controls = array();
 
+	    /**
+	     * All arguments passed to WP_Query object
+	     *
+	     * @var array
+	     * @access protected
+	     */
 	    protected $query_args = array();
-        /**
+
+	    /**
+	     * Debug flag if is true all short code setting will be displayed
+	     *
+	     * @var bool
+	     * @since 0.2
+	     * @access protected
+	     */
+		protected $debug = false;
+
+	    /**
          *
          * Class constructor
          *
@@ -75,7 +92,10 @@ if ( ! class_exists( '\SilverWp\ShortCode\Vc\ShortCodeAbstract' ) ) {
         public function init() {
             $this->create();
             $this->settings[ 'base' ] = $this->getTagBase();
-            vc_map( $this->settings );
+	        if ( $this->debug ) {
+		        Debug::dumpPrint( $this->settings );
+	        }
+	        vc_map( $this->settings );
         }
 
         /**
@@ -317,6 +337,15 @@ if ( ! class_exists( '\SilverWp\ShortCode\Vc\ShortCodeAbstract' ) ) {
             return $this;
         }
 
+	    /**
+	     * Add new setting argument to WP_Query
+	     *
+	     * @param string $name
+	     * @param string|array $value
+	     *
+	     * @return $this
+	     * @access public
+	     */
 	    public function addQueryArg( $name, $value ) {
 		    $this->query_args[ $name ] = $value;
 
@@ -397,13 +426,13 @@ if ( ! class_exists( '\SilverWp\ShortCode\Vc\ShortCodeAbstract' ) ) {
         /**
          * Convert image Id to url
          *
-         * @param int $imageId
+         * @param int $image_id
          *
          * @return bool|string
          * @access protected
          */
-        protected function imageId2Url( $imageId ) {
-            $image_url = wp_get_attachment_url( $imageId );
+        protected function imageId2Url( $image_id ) {
+            $image_url = wp_get_attachment_url( $image_id );
 
             return $image_url;
         }
@@ -445,6 +474,18 @@ if ( ! class_exists( '\SilverWp\ShortCode\Vc\ShortCodeAbstract' ) ) {
 
             return $this;
         }
+
+		/**
+		 * @param $controls
+		 *
+		 * @access public
+		 * @return $this
+		 */
+	    public function setControls( $controls ) {
+		    $this->settings[ 'controls' ] = $controls;
+
+		    return $this;
+	    }
 
         /**
          * Prepare short code attributes for view

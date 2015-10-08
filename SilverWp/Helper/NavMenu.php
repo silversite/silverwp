@@ -17,30 +17,23 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-/*
-  Repository path: $HeadURL: https://svn.nq.pl/wordpress/branches/dynamite/igniter/wp-content/themes/igniter/lib/SilverWp/Helper/NavMenu.php $
-  Last committed: $Revision: 2344 $
-  Last changed by: $Author: padalec $
-  Last changed date: $Date: 2015-02-05 11:40:32 +0100 (Cz, 05 lut 2015) $
-  ID: $Id: NavMenu.php 2344 2015-02-05 10:40:32Z padalec $
- */
 namespace SilverWp\Helper;
 
-use SilverWp\Helper\Page;
 use SilverWp\PostType\PostTypeAbstract;
 use SilverWp\SingletonAbstract;
 use SilverWp\Translate;
+use SilverWp\Wpml\Wpml;
 
 /**
  * Wp Nave Menu Helper
  * Fix active selected page for custom post types
  *
- * @author Michal Kalkowski <michal at silversite.pl>
- * @version $Id: NavMenu.php 2344 2015-02-05 10:40:32Z padalec $
- * @category WordPress
- * @package SilverWp
- * @subpackage Helper
- * @copyright (c) 2009 - 2014, SilverSite.pl
+ * @author        Michal Kalkowski <michal at silversite.pl>
+ * @version       0.6
+ * @category      WordPress
+ * @package       SilverWp
+ * @subpackage    Helper
+ * @copyright     SilverSite.pl (c) 2009 - 2014
  */
 class NavMenu extends SingletonAbstract {
     /**
@@ -82,20 +75,22 @@ class NavMenu extends SingletonAbstract {
             $css_classes = \array_filter( $css_classes, array( $this, 'removeActiveClass' ) );
             //get all registered custom post type templates
             foreach ( $custom_post_type as $post_type ) {
-
-                if ( $post_type === get_post_type() ) {
+				if ( $post_type === get_post_type() ) {
                     $searching_slug = array();
 
                     $templates = PostTypeAbstract::getTemplates( $post_type );
-                    $pages     = Page::getPageByTemplate( $templates );
 
-                    foreach ( $pages as $page ) {
-                        $slag              = sanitize_title( $page->post_title );
-                        $searching_slug[ ] = 'menu-' . $slag;
-                    }
+	                if ( ! is_null( $templates ) ) {
+	                    $pages = Page::getPageByTemplate( $templates );
 
-                    if ( array_intersect( $searching_slug, $css_classes ) ) {
-                        $css_classes[ ] = 'active';
+	                    foreach ( $pages as $page ) {
+		                    $slag             = sanitize_title( $page->post_title );
+		                    $searching_slug[] = 'menu-' . $slag;
+	                    }
+
+	                    if ( array_intersect( $searching_slug, $css_classes ) ) {
+		                    $css_classes[] = 'active';
+	                    }
                     }
 
                 }
@@ -127,7 +122,7 @@ class NavMenu extends SingletonAbstract {
     }
 
     /**
-     * register new  menu
+     * Register new menu
      *
      * @access public
      * @return void
@@ -136,7 +131,7 @@ class NavMenu extends SingletonAbstract {
         $menu = array(
             'footer' => Translate::translate( 'Footer menu' ),
         );
-        \register_nav_menus( $menu );
+        register_nav_menus( $menu );
     }
 
     /**

@@ -30,6 +30,7 @@ use SilverWp\FileSystem;
  * @package SilverWp
  * @subpackage Helper
  * @copyright (c) 2014, SilverSite.pl
+ * @deprecated 0.5
  */
 class MetaBox {
     /**
@@ -149,7 +150,7 @@ class MetaBox {
             foreach ( $matches as $match ) {
                 $icons[ ] = array(
                     'value' => $match[ 1 ],
-                    'label' => $match[ 1 ],
+                    'label' => str_replace( $name . '-', '', $match[ 1 ] ),
                 );
             }
             \set_transient( $transient_name, $icons, 60 * 60 * 24 );

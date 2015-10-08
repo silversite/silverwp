@@ -13,6 +13,12 @@
   "support": {
     "issues": "https://github.com/silversite/silverwp/issues"
   },
+  "repositories": [
+    {
+      "url": "https://github.com/aristath/kirki",
+      "type": "git"
+    }
+  ],
   "keywords": [
     "roots",
     "sage",
@@ -24,13 +30,14 @@
   ],
   "require": {
     "php": ">=5.3",
-    "aristath/kirki": "^1.*"
+    "aristath/kirki": "dev-master",
+    "abraham/twitteroauth": "^0.6.0"
   },
   "autoload": {
     "files": [
       "vendor/vafour/vafpress-framework/bootstrap.php",
       "vendor/evanto/auto-updates/class-pixelentity-theme-update.php",
-      "vendor/pluswp/wp-scss/bootstrap-for-theme.php",
+      "vendor/silversite/wp-scss/bootstrap-for-theme.php",
       "vendor/aristath/kirki/kirki.php",
       "vendor/Taxonomy_Single_Term/class.taxonomy-single-term.php",
       "vendor/scribu/posts-to-posts/posts-to-posts.php"
