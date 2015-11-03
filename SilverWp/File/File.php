@@ -138,6 +138,14 @@ class File {
 		return $status;
 	}
 
+	/**
+	 * Download file
+	 *
+	 * @param string $file path to file
+	 *
+	 * @static
+	 * @access public
+	 */
 	public static function download( $file ) {
 
 		//- turn off compression on the server

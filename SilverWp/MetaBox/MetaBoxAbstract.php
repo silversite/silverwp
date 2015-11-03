@@ -819,6 +819,7 @@ if ( ! class_exists( 'SilverWp\MetaBox\MetaBoxAbstract' ) ) {
 
 			$sidebar_code = $this->get( $post_id, 'sidebar' );
 
+			$sidebar_position = false;
 			switch ( $sidebar_code ) {
 				case '1':
 					$sidebar_position = 'left';
@@ -826,8 +827,6 @@ if ( ! class_exists( 'SilverWp\MetaBox\MetaBoxAbstract' ) ) {
 				case '2':
 					$sidebar_position = 'right';
 					break;
-				default:
-					$sidebar_position = 'right'; // default position
 			}
 
 			return $sidebar_position;

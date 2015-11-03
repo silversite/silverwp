@@ -31,7 +31,15 @@ if ( ! class_exists( 'SilverWp\Debug' ) ) {
      * @version   $Revision:$
      */
     class Debug {
-
+        /**
+         * Display debug information for this allowed IPs
+         *
+         * @var array
+         * @static
+         */
+	    public static $allwoed_ips = array(
+		    '31.183.61.125', '127.0.0.1', '31.182.69.228'
+	    );
         /**
          * Prate dump variable used var_dump function.
          *
@@ -42,12 +50,14 @@ if ( ! class_exists( 'SilverWp\Debug' ) ) {
          * @static
          */
         public static function dump( $variable, $label = null ) {
-            if ( ! is_null( $label ) ) {
-                echo '<p><strong>' . $label . '</strong></p>';
-            }
-            echo '<pre style="width:950px; padding:6px 18px; background:#fff; color:red; text-align:left; position:relative; z-index:9999999; ">';
-            var_dump( $variable );
-            echo '</pre>';
+	        if ( in_array( $_SERVER['REMOTE_ADDR'], self::$allwoed_ips ) ) {
+		        if ( ! is_null( $label ) ) {
+	                echo '<p><strong>' . $label . '</strong></p>';
+	            }
+	            echo '<pre style="width:950px; padding:6px 18px; background:#fff; color:red; text-align:left; position:relative; z-index:9999999; ">';
+	            var_dump( $variable );
+	            echo '</pre>';
+	        }
         }
 
         /**
@@ -61,12 +71,14 @@ if ( ! class_exists( 'SilverWp\Debug' ) ) {
          * @access public
          */
         public static function dumpPrint( $variable, $label = null ) {
-            if ( ! is_null( $label ) ) {
-                echo '<p><strong>' . $label . '</strong></p>';
-            }
-            echo '<pre style="width:950px; padding:6px 18px; background:#fff; color:red; text-align:left; position:relative; z-index:9999999; ">';
-            print_r( $variable );
-            echo '</pre>';
+	        if ( in_array( $_SERVER['REMOTE_ADDR'], self::$allwoed_ips ) ) {
+		        if ( ! is_null( $label ) ) {
+			        echo '<p><strong>' . $label . '</strong></p>';
+		        }
+		        echo '<pre style="width:950px; padding:6px 18px; background:#fff; color:red; text-align:left; position:relative; z-index:9999999; ">';
+		        print_r( $variable );
+		        echo '</pre>';
+	        }
         }
 
     }

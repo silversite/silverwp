@@ -19,10 +19,15 @@
 
 namespace SilverWp\Db;
 
+use SilverWp\Debug;
+use SilverWp\Helper\Message;
+use SilverWp\Helper\Thumbnail;
 use SilverWp\MetaBox\MetaBoxAbstract;
 use SilverWp\MetaBox\MetaBoxInterface;
 use SilverWp\PostType\PostTypeAbstract;
 use SilverWp\PostType\PostTypeInterface;
+use SilverWp\Translate;
+use SilverWpAddons\Ajax\PostLike;
 
 if ( ! class_exists( 'SilverWp\Db\Query' ) ) {
 
@@ -53,6 +58,23 @@ if ( ! class_exists( 'SilverWp\Db\Query' ) ) {
 		 */
 		private $meta_box = 'post';
 
+		/**
+		 * Add meta box key to SQL
+		 * @var bool
+		 * @access private
+		 */
+		private $meta_key = true;
+
+		/**
+		 * Add or not meta box key to post query
+		 *
+		 * @param boolean $meta_key
+		 */
+		public function setMetaKey( $meta_key ) {
+			$this->meta_key = $meta_key;
+			return $this;
+		}
+		
 		/**
 		 * Class constructor
 		 *
@@ -149,7 +171,9 @@ if ( ! class_exists( 'SilverWp\Db\Query' ) ) {
 			}else {
 				$meta_key = $meta_box;
 			}
-			$this->query_vars[ 'meta_key' ] = $meta_key;
+			if ( $this->meta_key ) {
+				$this->query_vars['meta_key'] = $meta_key;
+			}
 
 			return $this;
 		}
@@ -285,10 +309,41 @@ if ( ! class_exists( 'SilverWp\Db\Query' ) ) {
 			if ( strpos( $this->post->post_content, '<!--more-->' ) !== false ) {
 				return get_the_content( $read_more_text );
 			} else {
-				return get_the_excerpt();
+				$excerpt = get_the_excerpt();
+				$content = empty( $excerpt ) ? get_the_content() : $excerpt;
+				return $this->getExcerpt( $content );
 			}
 		}
 
+		/**
+		 * @param string $excerpt
+		 * @param int $limit
+		 *
+		 * @return mixed|string
+		 * @access public
+		 */
+		public function getExcerpt( $excerpt, $show_hellip = false, $limit = 250 ) {
+			if ( $excerpt !== '' ) {
+				$excerpt = preg_replace( '(\[.*?\])', '', $excerpt );
+				$excerpt = strip_shortcodes( $excerpt );
+				$excerpt = strip_tags( $excerpt );
+				$lenght  = mb_strlen( $excerpt );
+				if ( $lenght >= $limit ) {
+					$excerpt = substr( $excerpt, 0, $limit );
+					$excerpt = substr( $excerpt, 0, strripos( $excerpt, " " ) );
+				}
+				$excerpt = trim( preg_replace( '/\s+/', ' ', $excerpt ) );
+				if ( $lenght > $limit
+				     && ( ( ! is_single() && ! is_singular() ) || $show_hellip )
+				) {
+					$excerpt = $excerpt . ' <a href="'
+					           . get_permalink( $post->ID )
+					           . '">&hellip;</a>';
+				}
+			}
+
+			return $excerpt;
+		}
 		/**
 		 * Get post description
 		 *
@@ -337,6 +392,22 @@ if ( ! class_exists( 'SilverWp\Db\Query' ) ) {
 		}
 
 		/**
+		 * Get single meta box by name
+		 *
+		 * @param string       $control_name meta box form control name
+		 *
+		 * @param array|string $size         array with image width and height or image size name
+		 *
+		 * @return string|array|boolean
+		 * @access public
+		 */
+		public function getGallery( $control_name = 'gallery', $size = '' ) {
+			$post_id = $this->getPostId();
+			$meta_box = $this->meta_box->getGallery( $post_id, $control_name, $size );
+
+			return $meta_box;
+		}
+		/**
 		 * Get date by format.
 		 *
 		 * @param string $date_format Formats: full or date
@@ -379,25 +450,28 @@ if ( ! class_exists( 'SilverWp\Db\Query' ) ) {
 		 *
 		 * @param string $taxonomy_name
 		 *
-		 * @param string $before
-		 * @param string $sep
-		 * @param string $after
-		 *
-		 * @return bool|false|string|\WP_Error
+		 * @return bool|array
 		 * @access public
 		 * @since  0.4
 		 */
-		public function getTerms( $taxonomy_name, $before = '', $sep = ', ', $after = '' ) {
+		public function getTerms( $taxonomy_name ) {
 			$taxonomy = $this->post_type->getTaxonomy();
 			if ( $taxonomy->isRegistered( $taxonomy_name ) ) {
 				$tax = $taxonomy->get( $taxonomy_name );
-				return get_the_term_list(
-					$this->getPostId()
-					, $tax['full_name']
-					, $before
-					, $sep
-					, $after
-				);
+				$terms = get_the_terms( $this->getPostId() , $tax['full_name'] );
+				if ( $terms && ! is_wp_error( $terms ) ) {
+					foreach ( $terms as $key => $term ) {
+						$url = get_term_link( $term->slug, $tax['full_name'] );
+						if ( $url && ! is_wp_error( $url )  ) {
+							$terms[ $key ] = (object) array_merge(
+								(array) $term,
+								array( 'url' => $url )
+							);
+						}
+					}
+					return $terms;
+				}
+				return false;
 			}
 
 			return false;
@@ -441,7 +515,7 @@ if ( ! class_exists( 'SilverWp\Db\Query' ) ) {
 		 */
 		public function isThumbnail() {
 			$post_id = $this->getPostId();
-			if ( in_array( 'thumbnail', $this->post_type->getSupports() )
+			if ( in_array( 'thumbnail', $this->post_type->getSupport() )
 			     && \has_post_thumbnail( $post_id )
 			) {
 				return true;
@@ -458,7 +532,7 @@ if ( ! class_exists( 'SilverWp\Db\Query' ) ) {
 		 * @since 0.3
 		 */
 		public function isDescription() {
-			$editor = \in_array( 'editor', $this->post_type->getSupports() );
+			$editor = \in_array( 'editor', $this->post_type->getSupport() );
 
 			return $editor;
 		}
@@ -471,7 +545,7 @@ if ( ! class_exists( 'SilverWp\Db\Query' ) ) {
 		 * @since 0.3
 		 */
 		public function isTitle() {
-			$is_title = \in_array( 'title', $this->post_type->getSupports() );
+			$is_title = \in_array( 'title', $this->post_type->getSupport() );
 
 			return $is_title;
 		}
@@ -499,9 +573,8 @@ if ( ! class_exists( 'SilverWp\Db\Query' ) ) {
 		public function getSidebarPosition() {
 			$post_id = $this->getPostId();
 			$sidebar = $this->meta_box->getSidebarPosition($post_id);
-
 			return $sidebar;
-		}
 
+		}
 	}
 }
