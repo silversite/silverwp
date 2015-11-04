@@ -278,13 +278,13 @@ if ( ! class_exists( 'SilverWp\Db\Query' ) ) {
 		}
 
 		/**
-		 * Get Post Id
+		 * Get Post Id or null if post doesn't exists
 		 *
-		 * @return int
+		 * @return int|null
 		 * @access public
 		 */
 		public function getPostId() {
-			return $this->post->ID;
+			return $this->post ? $this->post->ID : null;
 		}
 
 		/**

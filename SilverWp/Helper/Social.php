@@ -135,6 +135,7 @@ class Social {
             }
         }
         UtlArray::array_sort_by_column( $social, 'order' );
+
         return $social;
     }
 
@@ -146,20 +147,21 @@ class Social {
      * @access public
      */
     public static function getVerticalAccounts() {
+	    $vertical_list   = $vertical_list_slug = array();
+	    $vertical_plugin = Option::get_theme_option( 'social_plugin', true );
+        if ( $vertical_plugin ) {
+	        foreach ( $vertical_plugin as $social_slug => $social_bool ) {
+		        if ( $social_bool === '1' ) {
+			        $vertical_list_slug[] = $social_slug;
+		        }
+	        }
 
-        $vertical_plugin = Option::get_theme_option( 'social_plugin', true );
-        $vertical_list = $vertical_list_slug = array();
-        foreach ( $vertical_plugin as $social_slug => $social_bool ) {
-            if ( $social_bool === '1' ) {
-                $vertical_list_slug[] = $social_slug;
-            }
-        }
-
-        $accounts_list = Social::getAccounts();
-        foreach ( $accounts_list as $social ) {
-            if ( in_array( $social['slug'], $vertical_list_slug ) ) {
-                $vertical_list[] = $social;
-            }
+	        $accounts_list = Social::getAccounts();
+	        foreach ( $accounts_list as $social ) {
+		        if ( in_array( $social['slug'], $vertical_list_slug ) ) {
+			        $vertical_list[] = $social;
+		        }
+	        }
         }
 
         return $vertical_list;
