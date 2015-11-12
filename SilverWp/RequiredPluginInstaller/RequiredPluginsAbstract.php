@@ -112,11 +112,11 @@ if ( ! class_exists( 'RequiredPluginInstaller\RequiredPluginsAbstract' ) ) {
          */
         protected function __construct() {
             $this->strings = array(
-                'page_title'                      => __( 'Install Required Plugins' ),
-                'menu_title'                      => __( 'Install Plugins' ),
-                'installing'                      => __( 'Installing Plugin: %s' ),
+                'page_title'                      => esc_html__( 'Install Required Plugins' ),
+                'menu_title'                      => esc_html__( 'Install Plugins' ),
+                'installing'                      => esc_html__( 'Installing Plugin: %s' ),
                 // %s = plugin name.
-                'oops'                            => __( 'Something went wrong with the plugin API.' ),
+                'oops'                            => esc_html__( 'Something went wrong with the plugin API.' ),
                 'notice_can_install_required'     => _n_noop( 'This theme requires the following plugin: %1$s.',
                                                                        'This theme requires the following plugins: %1$s.' ),
                 // %1$s = plugin name(s).
@@ -145,9 +145,9 @@ if ( ! class_exists( 'RequiredPluginInstaller\RequiredPluginsAbstract' ) ) {
                                                                        'Begin installing plugins' ),
                 'activate_link'                   => _n_noop( 'Begin activating plugin',
                                                                        'Begin activating plugins' ),
-                'return'                          => __( 'Return to Required Plugins Installer' ),
-                'plugin_activated'                => __( 'Plugin activated successfully.' ),
-                'complete'                        => __( 'All plugins installed and activated successfully. %s' ),
+                'return'                          => esc_html__( 'Return to Required Plugins Installer' ),
+                'plugin_activated'                => esc_html__( 'Plugin activated successfully.' ),
+                'complete'                        => esc_html__( 'All plugins installed and activated successfully. %s' ),
                 // %s = dashboard link.
                 'nag_type'                        => 'updated'
                 // Determines admin notice type - can only be 'updated', 'update-nag' or 'error'.

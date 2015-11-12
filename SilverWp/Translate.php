@@ -67,9 +67,9 @@ if ( ! class_exists( '\SilverWp\Translate' ) ) {
             $args       = func_get_args();
             $message_id = array_shift( $args );
             if ($args_count > 1) {
-                $message = vsprintf( translate( $message_id, self::$text_domain ), $args );
+                $message = vsprintf( esc_html__( $message_id, self::$text_domain ), $args );
             } else {
-                $message = translate( $message_id, self::$text_domain );
+                $message = esc_html__( $message_id, self::$text_domain );
             }
             return $message;
         }
@@ -112,6 +112,7 @@ if ( ! class_exists( '\SilverWp\Translate' ) ) {
          * @access public
          */
         public static function e( $message_id ) {
+	        throw new Exception('Function _e is depraced. Use esc_html__ or wrap by wp_kses()');
             _e( $message_id, self::$text_domain );
         }
 

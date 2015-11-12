@@ -108,8 +108,8 @@ if ( ! class_exists( 'SilverWp\Customizer\Panel\PanelAbstract' ) ) {
          * An associative array with panel params:
          * array(
          *      'priority'       => 10,
-         *      'title'          => __('Theme Options', 'mytheme'),
-         *      'description'    => __('Several settings pertaining my theme', 'mytheme'),
+         *      'title'          => esc_html__('Theme Options', 'mytheme'),
+         *      'description'    => esc_html__('Several settings pertaining my theme', 'mytheme'),
          * )
          *
          * @return array

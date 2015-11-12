@@ -46,16 +46,16 @@ if ( ! class_exists( '\SilverWp\ShortCode\Vc\Form\Element\FontContainer' ) ) {
      *                //'font_style_bold'
      *                //'font_family'
      *
-     *                'tag_description' => __('Select element tag.','js_composer'),
-     *                'text_align_description' => __('Select text alignment.','js_composer'),
-     *                'font_size_description' => __('Enter font size.','js_composer'),
-     *                'line_height_description' => __('Enter line height.','js_composer'),
-     *                'color_description' => __('Select color for your element.','js_composer'),
-     *                //'font_style_description' => __('Put your description here','js_composer'),
-     *                //'font_family_description' => __('Put your description here','js_composer'),
+     *                'tag_description' => esc_html__('Select element tag.','js_composer'),
+     *                'text_align_description' => esc_html__('Select text alignment.','js_composer'),
+     *                'font_size_description' => esc_html__('Enter font size.','js_composer'),
+     *                'line_height_description' => esc_html__('Enter line height.','js_composer'),
+     *                'color_description' => esc_html__('Select color for your element.','js_composer'),
+     *                //'font_style_description' => esc_html__('Put your description here','js_composer'),
+     *                //'font_family_description' => esc_html__('Put your description here','js_composer'),
      *            ),
      *        ),
-     *        // 'description' => __( '', 'js_composer' ), // description for field group
+     *        // 'description' => esc_html__( '', 'js_composer' ), // description for field group
      *    ),
      *
      * @category WordPress
@@ -81,13 +81,13 @@ if ( ! class_exists( '\SilverWp\ShortCode\Vc\Form\Element\FontContainer' ) ) {
          *  'font_style_bold'
          *  'font_family'
          *
-         * 'tag_description' => __('Select element tag.','js_composer'),
-         * 'text_align_description' => __('Select text alignment.','js_composer'),
-         * 'font_size_description' => __('Enter font size.','js_composer'),
-         * 'line_height_description' => __('Enter line height.','js_composer'),
-         * 'color_description' => __('Select color for your element.','js_composer'),
-         * 'font_style_description' => __('Put your description here','js_composer'),
-         * 'font_family_description' => __('Put your description here','js_composer'),
+         * 'tag_description' => esc_html__('Select element tag.','js_composer'),
+         * 'text_align_description' => esc_html__('Select text alignment.','js_composer'),
+         * 'font_size_description' => esc_html__('Enter font size.','js_composer'),
+         * 'line_height_description' => esc_html__('Enter line height.','js_composer'),
+         * 'color_description' => esc_html__('Select color for your element.','js_composer'),
+         * 'font_style_description' => esc_html__('Put your description here','js_composer'),
+         * 'font_family_description' => esc_html__('Put your description here','js_composer'),
          *
          * @param string $name fields settings name
          * @param mixed  $value fields settings value

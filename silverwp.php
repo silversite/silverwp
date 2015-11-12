@@ -15,7 +15,7 @@
  * @wordpress-plugin
  * Plugin Name:       SilverWp
  * Description:       SilverWp is a framework to help developers create themes or plugins
- * Version:           0.1
+ * Version:           0.5
  * Author:            Michal Kalkowski
  * Author URI:        http://www.silversite.pl/
  * License:           GPL-2.0+
