@@ -22,6 +22,48 @@ if ( class_exists( 'Kirki_Helper' ) ) {
 
 class Kirki_Helper {
 
+	public static function array_replace_recursive( $array, $array1 ) {
+		// handle the arguments, merge one by one
+		$args  = func_get_args();
+		$array = $args[0];
+		if ( ! is_array( $array ) ) {
+			return $array;
+		}
+		for ( $i = 1; $i < count( $args ); $i++ ) {
+			if ( is_array( $args[ $i ] ) ) {
+				$array = self::recurse( $array, $args[ $i ] );
+			}
+		}
+		return $array;
+	}
+
+	public static function recurse( $array, $array1 ) {
+		foreach ( $array1 as $key => $value ) {
+			// create new key in $array, if it is empty or not an array
+			if ( ! isset( $array[ $key ] ) || ( isset( $array[ $key ] ) && ! is_array( $array[ $key ] ) ) ) {
+				$array[ $key ] = array();
+			}
+
+			// overwrite the value in the base array
+			if ( is_array( $value ) ) {
+				$value = self::recurse( $array[ $key ], $value );
+			}
+			$array[ $key ] = $value;
+		}
+		return $array;
+	}
+
+	/**
+	 * Initialize the WP_Filesystem
+	 */
+	public static function init_filesystem() {
+		global $wp_filesystem;
+		if ( empty( $wp_filesystem ) ) {
+			require_once ( ABSPATH . '/wp-admin/includes/file.php' );
+			WP_Filesystem();
+		}
+	}
+
 	/**
 	 * Helper function
 	 *
@@ -39,6 +81,20 @@ class Kirki_Helper {
 
 	}
 
+	public static function array_flatten( array $array ) {
+		$flat  = array(); // initialize return array
+		$stack = array_values( $array );
+		while ( $stack ) { // process stack until done
+			$value = array_shift( $stack );
+			if ( is_array( $value ) ) { // a value to further process
+				$stack = array_merge( array_keys( $value ), $stack );
+			} else { // a value to take
+				$flat[] = $value;
+			}
+		}
+		return $flat;
+	}
+
 	/**
 	 * Returns the attachment object
 	 *
@@ -46,11 +102,7 @@ class Kirki_Helper {
 	 * @return 	string		numeric ID of the attachement.
 	 */
 	public static function get_image_id( $url ) {
-
-		global $wpdb;
-		$attachment = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE guid='%s';", $url ) );
-		return $attachment[0];
-
+		return url_to_postid( $url );
 	}
 
 	/**
@@ -90,5 +142,38 @@ class Kirki_Helper {
 		return $items;
 
 	}
+
+	public static function get_taxonomies() {
+
+		$items = array();
+
+		// Get the taxonomies
+		$taxonomies = get_taxonomies( array( 'public' => true ) );
+		// Build the array
+		foreach ( $taxonomies as $taxonomy ) {
+			$id           = $taxonomy;
+			$taxonomy     = get_taxonomy( $taxonomy );
+			$items[ $id ] = $taxonomy->labels->name;
+		}
+
+		return $items;
+
+	}
+
+	public static function get_post_types() {
+
+		$items = array();
+
+		// Get the post types
+		$post_types = get_post_types( array( 'public' => true ), 'objects' );
+		// Build the array
+		foreach ( $post_types as $post_type ) {
+			$items[ $post_type->name ] = $post_type->labels->name;
+		}
+
+		return $items;
+
+	}
+
 
 }

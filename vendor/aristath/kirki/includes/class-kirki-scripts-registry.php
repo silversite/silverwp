@@ -30,11 +30,12 @@ class Kirki_Scripts_Registry {
 
 	public function __construct() {
 
-		$this->dependencies = new Kirki_Scripts_Customizer_Default_Scripts();
-		$this->branding     = new Kirki_Scripts_Customizer_Branding();
-		$this->postmessage  = new Kirki_Scripts_Customizer_PostMessage();
-		$this->tooltips     = new Kirki_Scripts_Customizer_Tooltips();
-		$this->googlefonts  = new Kirki_Scripts_Frontend_Google_Fonts();
+		$this->dependencies = new Kirki_Customizer_Scripts_Default_Scripts();
+		$this->branding     = new Kirki_Customizer_Scripts_Branding();
+		$this->postmessage  = new Kirki_Customizer_Scripts_PostMessage();
+		$this->tooltips     = new Kirki_Customizer_Scripts_Tooltips();
+		$this->icons        = new Kirki_Customizer_Scripts_Icons();
+		$this->googlefonts  = new Kirki_Google_Fonts_Scripts();
 
 	}
 
@@ -42,7 +43,7 @@ class Kirki_Scripts_Registry {
 	 * @param string $script
 	 */
 	public static function prepare( $script ) {
-		return '<script>jQuery(document).ready(function($) { "use strict"; '.$script.'});</script>';
+		return '<script>jQuery(document).ready(function($) { "use strict"; ' . $script . '});</script>';
 	}
 
 }
