@@ -13,12 +13,6 @@
   "support": {
     "issues": "https://github.com/silversite/silverwp/issues"
   },
-  "repositories": [
-    {
-      "url": "https://github.com/aristath/kirki",
-      "type": "git"
-    }
-  ],
   "keywords": [
     "roots",
     "sage",
@@ -29,8 +23,7 @@
     "wp"
   ],
   "require": {
-    "php": ">=5.3",
-    "abraham/twitteroauth": "^0.6.0"
+    "php": ">=5.3"
   },
   "autoload": {
     "files": [
