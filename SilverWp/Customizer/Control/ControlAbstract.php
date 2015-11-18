@@ -22,22 +22,25 @@ use SilverWp\Customizer\CustomizerAbstract;
 use SilverWp\Debug;
 use SilverWp\Translate;
 
-if ( ! class_exists( 'SilverWp\Customizer\Control\ControlAbstract' ) ) {
+if ( ! class_exists('SilverWp\Customizer\Control\ControlAbstract')) {
 
     /**
      *
      * Base class for customizer controls
      *
-     * @category WordPress
-     * @package SilverWp
+     * @category   WordPress
+     * @package    SilverWp
      * @subpackage Customizer\Control
-     * @author Michal Kalkowski <michal at silversite.pl>
-     * @copyright SilverSite.pl 2015
-     * @version $Revision:$
-     * @link http://kirki.org/
+     * @author     Michal Kalkowski <michal at silversite.pl>
+     * @copyright  SilverSite.pl 2015
+     * @version    $Revision:$
+     * @link       http://kirki.org/
      * @abstract
      */
-    abstract class ControlAbstract extends \SilverWp\Helper\Control\ControlAbstract implements ControlInterface {
+    abstract class ControlAbstract
+        extends \SilverWp\Helper\Control\ControlAbstract
+        implements ControlInterface
+    {
 
         /**
          * Export or not to less variable
@@ -47,13 +50,13 @@ if ( ! class_exists( 'SilverWp\Customizer\Control\ControlAbstract' ) ) {
          */
         protected $is_template_variable = true;
 
-	    /**
-	     * Value input filters
-	     *
-	     * @todo this should by array with filters ZF2 Filters?
-	     * @var bool
-	     */
-	    protected $filters = true;
+        /**
+         * Value input filters
+         *
+         * @todo this should by array with filters ZF2 Filters?
+         * @var bool
+         */
+        protected $filters = true;
 
         /**
          *
@@ -63,9 +66,10 @@ if ( ! class_exists( 'SilverWp\Customizer\Control\ControlAbstract' ) ) {
          *
          * @throws \SilverWp\Customizer\Control\Exception
          */
-        public function __construct( $control_name ) {
-            parent::__construct( $control_name );
-            $this->setName( $control_name );
+        public function __construct($control_name)
+        {
+            parent::__construct($control_name);
+            $this->setName($control_name);
         }
 
         /**
@@ -76,8 +80,9 @@ if ( ! class_exists( 'SilverWp\Customizer\Control\ControlAbstract' ) ) {
          * @return $this
          * @access public
          */
-        public function setSectionName( $name ) {
-            $this->setting[ 'section' ] = $name;
+        public function setSectionName($name)
+        {
+            $this->setting['section'] = $name;
 
             return $this;
         }
@@ -91,9 +96,10 @@ if ( ! class_exists( 'SilverWp\Customizer\Control\ControlAbstract' ) ) {
          * @return $this
          * @access public
          */
-        public function setName( $name ) {
-            $this->removeSetting( 'name' );
-            $this->setting[ 'settings' ] = $name;
+        public function setName($name)
+        {
+            $this->removeSetting('name');
+            $this->setting['settings'] = $name;
 
             return $this;
         }
@@ -104,8 +110,9 @@ if ( ! class_exists( 'SilverWp\Customizer\Control\ControlAbstract' ) ) {
          * @return string
          * @access public
          */
-        public function getName() {
-            return $this->setting[ 'settings' ];
+        public function getName()
+        {
+            return $this->setting['settings'];
         }
 
         /**
@@ -117,8 +124,9 @@ if ( ! class_exists( 'SilverWp\Customizer\Control\ControlAbstract' ) ) {
          * @access public
          * @return $this
          */
-        public function setPriority( $priority ) {
-            $this->setting[ 'priority' ] = $priority;
+        public function setPriority($priority)
+        {
+            $this->setting['priority'] = $priority;
 
             return $this;
         }
@@ -132,8 +140,9 @@ if ( ! class_exists( 'SilverWp\Customizer\Control\ControlAbstract' ) ) {
          * @access public
          * @return $this
          */
-        public function setSubtitle( $subtitle ) {
-            $this->setDescription( $subtitle );
+        public function setSubtitle($subtitle)
+        {
+            $this->setDescription($subtitle);
 
             return $this;
         }
@@ -145,61 +154,68 @@ if ( ! class_exists( 'SilverWp\Customizer\Control\ControlAbstract' ) ) {
          * @return string
          * @access public
          */
-        public function getValue() {
-			$value =  \Kirki::get_option( CustomizerAbstract::getId(), $this->getName());
-			//todo add filters from ZF2
-	        $value = htmlspecialchars_decode( $value, ENT_NOQUOTES );
-	        if ( strpos( $value, '&#039;' ) !== false ) {
-		        $value = str_replace( '&#039;', '\'', $value );
-	        }
-	        return $value;
+        public function getValue()
+        {
+            $value = \Kirki::get_option(
+                CustomizerAbstract::getId(), $this->getName()
+            );
+            //todo add filters from ZF2
+            $value = htmlspecialchars_decode($value, ENT_NOQUOTES);
+            if (strpos($value, '&#039;') !== false) {
+                $value = str_replace('&#039;', '\'', $value);
+            }
+
+            return $value;
         }
 
-	    /**
-	     * Set control Dependency
-	     *
-	     * @return $this
-	     * @throws \SilverWp\Customizer\Control\Exception
-	     * @access public
-	     */
-	    public function setDependency() {
-		    list( $parent_control, $operator, $parent_option ) = func_get_args();
+        /**
+         * Set control Dependency
+         *
+         * @return $this
+         * @throws \SilverWp\Customizer\Control\Exception
+         * @access public
+         */
+        public function setDependency()
+        {
+            list($parent_control, $operator, $parent_option) = func_get_args();
 
-		    if ( ! $parent_control instanceof ControlInterface ) {
-			    throw new Exception(
-				    Translate::translate(
-					    'First arguments should by instance of \SilverWp\Customizer\Control\ControlInterface'
-				    )
-			    );
-		    }
-		    $this->setting['required'][] = array(
-			    'setting'  => $parent_control->getName(),
-			    'operator' => $operator,
-			    'value'    => $parent_option,
-		    );
+            if ( ! $parent_control instanceof ControlInterface) {
+                throw new Exception(
+                    Translate::translate(
+                        'First arguments should by instance of \SilverWp\Customizer\Control\ControlInterface'
+                    )
+                );
+            }
+            $this->setting['required'][] = array(
+                'setting'  => $parent_control->getName(),
+                'operator' => $operator,
+                'value'    => $parent_option,
+            );
 
-		    return $this;
-	    }
+            return $this;
+        }
 
-	    /**
-	     * Add dependency
-	     *
-	     * @param ControlInterface $parent_control
-	     * @param string $operator example: ==, !== etc.
-	     * @param string $parent_option
-	     *
-	     * @return $this
+        /**
+         * Add dependency
+         *
+         * @param ControlInterface $parent_control
+         * @param string           $operator example: ==, !== etc.
+         * @param string           $parent_option
+         *
+         * @return $this
          * @see https://github.com/aristath/kirki/wiki/required
-	     */
-	    public function addDependency( ControlInterface $parent_control, $operator, $parent_option ) {
-		    $this->setting['required'][] = array(
-			    'setting'  => $parent_control->getName(),
-			    'operator' => $operator,
-			    'value'    => $parent_option,
-		    );
+         */
+        public function addDependency(ControlInterface $parent_control,
+            $operator, $parent_option
+        ) {
+            $this->setting['required'][] = array(
+                'setting'  => $parent_control->getName(),
+                'operator' => $operator,
+                'value'    => $parent_option,
+            );
 
-		    return $this;
-	    }
+            return $this;
+        }
 
         /**
          * Using the output argument you can specify if you want Kirki to automatically
@@ -214,27 +230,28 @@ if ( ! class_exists( 'SilverWp\Customizer\Control\ControlAbstract' ) ) {
          * As units you can use any valid CSS unit (for example px, em, rem etc.)
          *
          * @param array $output example:
-         * array(
-         *      array(
-         *          'element'  => '#content .btn',
-         *          'property' => 'color'
-         *          Units can be useful when defining for example font-size
-         *          They can be anything you want appended to the value
-         *          but usually it's something like 'px', 'em', 'rem' etc.
-         *          'units'    => '',
-         *      ),
-         *      array(
-         *          'element'  => '#content',
-         *          'property' => 'border-color',
-         *      ),
-         * ),
+         *                      array(
+         *                      array(
+         *                      'element'  => '#content .btn',
+         *                      'property' => 'color'
+         *                      Units can be useful when defining for example font-size
+         *                      They can be anything you want appended to the value
+         *                      but usually it's something like 'px', 'em', 'rem' etc.
+         *                      'units'    => '',
+         *                      ),
+         *                      array(
+         *                      'element'  => '#content',
+         *                      'property' => 'border-color',
+         *                      ),
+         *                      ),
          *
          * @access public
          * @return $this
-         * @see https://github.com/aristath/kirki/wiki/output
+         * @see    https://github.com/aristath/kirki/wiki/output
          */
-        public function setOutput( array $output ) {
-            $this->setting[ 'output' ] = $output;
+        public function setOutput(array $output)
+        {
+            $this->setting['output'] = $output;
 
             return $this;
         }
@@ -242,23 +259,24 @@ if ( ! class_exists( 'SilverWp\Customizer\Control\ControlAbstract' ) ) {
         /**
          * Add output element
          *
-         * @param string $element as you define a CSS element in your document that you want to affect.
-         * @param string $property as you can use any valid CSS property.
-         * @param null|string $units as units you can use any valid CSS unit (for example px, em, rem etc.)
+         * @param string      $element  as you define a CSS element in your document that you want to affect.
+         * @param string      $property as you can use any valid CSS property.
+         * @param null|string $units    as units you can use any valid CSS unit (for example px, em, rem etc.)
          *
          * @return $this
          * @access public
-         * @see https://github.com/aristath/kirki/wiki/output
+         * @see    https://github.com/aristath/kirki/wiki/output
          */
-        public function addOutput( $element, $property, $units = null ) {
+        public function addOutput($element, $property, $units = null)
+        {
             $output = array(
                 'element'  => $element,
                 'property' => $property,
             );
-            if ( ! is_null( $units ) ) {
-                $output[ 'units' ] = $units;
+            if ( ! is_null($units)) {
+                $output['units'] = $units;
             }
-            $this->setting[ 'output' ][ ] = $output;
+            $this->setting['output'][] = $output;
 
             return $this;
         }
@@ -270,7 +288,8 @@ if ( ! class_exists( 'SilverWp\Customizer\Control\ControlAbstract' ) ) {
          * @return bool
          * @access public
          */
-        public function isTemplateVariable() {
+        public function isTemplateVariable()
+        {
             return $this->is_template_variable;
         }
 
@@ -283,8 +302,9 @@ if ( ! class_exists( 'SilverWp\Customizer\Control\ControlAbstract' ) ) {
          * @return $this
          * @access public
          */
-        public function setIsTemplateVariable( $is_template_variable ) {
-            $this->is_template_variable = (bool) $is_template_variable;
+        public function setIsTemplateVariable($is_template_variable)
+        {
+            $this->is_template_variable = (bool)$is_template_variable;
 
             return $this;
         }
@@ -300,8 +320,9 @@ if ( ! class_exists( 'SilverWp\Customizer\Control\ControlAbstract' ) ) {
          * @access public
          * @return $this
          */
-        public function setTransport( $transport ) {
-            $this->setting[ 'transport' ] = $transport;
+        public function setTransport($transport)
+        {
+            $this->setting['transport'] = $transport;
 
             return $this;
         }
@@ -317,8 +338,9 @@ if ( ! class_exists( 'SilverWp\Customizer\Control\ControlAbstract' ) ) {
          * @return $this
          * @access public
          */
-        public function setSanitizeCallback( $callback ) {
-            $this->setting[ 'sanitize_callback' ] = $callback;
+        public function setSanitizeCallback($callback)
+        {
+            $this->setting['sanitize_callback'] = $callback;
 
             return $this;
         }
@@ -334,10 +356,11 @@ if ( ! class_exists( 'SilverWp\Customizer\Control\ControlAbstract' ) ) {
          *
          * @return $this
          * @access public
-         * @see https://github.com/aristath/kirki/wiki/help
+         * @see    https://github.com/aristath/kirki/wiki/help
          */
-        public function setHelp( $message ) {
-            $this->setting[ 'help' ] = $message;
+        public function setHelp($message)
+        {
+            $this->setting['help'] = $message;
 
             return $this;
         }
@@ -362,10 +385,11 @@ if ( ! class_exists( 'SilverWp\Customizer\Control\ControlAbstract' ) ) {
          *
          * @return $this
          * @access public
-         * @see https://github.com/aristath/kirki/wiki/js_vars
+         * @see    https://github.com/aristath/kirki/wiki/js_vars
          */
-        public function addJsVariable( array $variable ) {
-            $this->setting[ 'js_vars' ][ ] = $variable;
+        public function addJsVariable(array $variable)
+        {
+            $this->setting['js_vars'][] = $variable;
 
             return $this;
         }

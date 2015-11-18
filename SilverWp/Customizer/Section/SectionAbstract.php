@@ -20,224 +20,210 @@ namespace SilverWp\Customizer\Section;
 
 use RequiredPluginInstaller\CoreInterface;
 use SilverWp\Customizer\Control\ControlInterface;
+use SilverWp\Customizer\CustomizerAbstract;
 use SilverWp\Customizer\Section\Exception;
 use SilverWp\Debug;
+use SilverWp\ParamsAbstract;
 
 if ( ! class_exists( 'SilverWp\Customizer\Section\SectionAbstract' ) ) {
 
-    /**
-     * Base section class
-     *
-     * @category WordPress
-     * @package SilverWp
-     * @subpackage Customizer\Sections
-     * @author Michal Kalkowski <michal at silversite.pl>
-     * @copyright Dynamite-Studio.pl & silversite.pl 2015
-     * @version $Revision:$
-     * @abstract
-     */
-    abstract class SectionAbstract implements SectionInterface, CoreInterface {
-        /**
-         *
-         * Section name
-         *
-         * @var string
-         * @access protected
-         */
-        protected $name;
+	/**
+	 * Base section class
+	 *
+	 * @category   WordPress
+	 * @package    SilverWp
+	 * @subpackage Customizer\Sections
+	 * @author     Michal Kalkowski <michal at silversite.pl>
+	 * @copyright  Silversite.pl (c) 2015
+	 * @version    0.6
+	 * @abstract
+	 */
+	abstract class SectionAbstract extends ParamsAbstract
+		implements SectionInterface, CoreInterface {
+		/**
+		 *
+		 * Section name
+		 *
+		 * @var string
+		 * @access protected
+		 */
+		protected $name;
 
-        /**
-         *
-         * Unique panel id
-         *
-         * @var string
-         * @access private
-         */
-        private $panel_id;
+		protected $debug = false;
+		/**
+		 *
+		 * Unique panel id
+		 *
+		 * @var string
+		 * @access private
+		 */
+		private $panel_id;
 
-        /**
-         * All section controls
-         *
-         * @var array
-         * @access private
-         */
-        private $controls = array();
+		/**
+		 * All section controls
+		 *
+		 * @var array
+		 * @access private
+		 */
+		private $controls = array();
 
-        /**
-         *
-         * @var array
-         * @access private
-         */
-        private $controls_settings = array();
+		/**
+		 *
+		 * @var array
+		 * @access private
+		 */
+		private $controls_settings = array();
 
-        /**
-         *
-         * Class constructor register section elements
-         *
-         * @access public
-         */
-        public function __construct() {
-            add_action( 'customize_register', array( $this, 'init' ) );
-            add_filter( 'kirki/fields', array( $this, 'registerControls' ) );
-        }
+		protected $capability = 'edit_theme_options';
 
-        /**
-         * Register controls to panel
-         *
-         * @param array $controls
-         *
-         * @return array
-         * @access public
-         */
-        public function registerControls( array $controls ) {
-            $this->controls_settings = $controls;
-            $this->createControls();
+		/**
+		 *
+		 * Class constructor register section elements
+		 *
+		 * @access public
+		 */
+		public function __construct() {
+			$this->setUp();
+		}
 
-            return $this->controls_settings;
-        }
+		/**
+		 * Initialize customizer and add panel and section object
+		 *
+		 * @access public
+		 */
+		public function init() {
+			$this->addSection();
+		}
 
-        /**
-         * Initialize customizer and add panel and section object
-         *
-         * @access public
-         */
-        public function init() {
-            $this->addSection();
-        }
+		/**
+		 * Set unique panel id
+		 *
+		 * @param string $panel_id
+		 *
+		 * @return $this
+		 * @access public
+		 */
+		public function setPanelId( $panel_id ) {
+			$this->panel_id = $panel_id;
 
-        /**
-         * Set unique panel id
-         *
-         * @param string $panel_id
-         *
-         * @return $this
-         * @access public
-         */
-        public function setPanelId( $panel_id ) {
-            $this->panel_id = $panel_id;
+			return $this;
+		}
 
-            return $this;
-        }
+		/**
+		 * Add new section element
+		 *
+		 * @access private
+		 */
+		public function addSection() {
+			$params = $this->getParams();
+			if ( isset( $this->panel_id ) ) {
+				$params['panel'] = $this->panel_id;
+			}
+			if ( ! isset($params['capability'])) {
+				$params['capability'] = $this->capability;
+			}
 
-        /**
-         * Add new section element
-         *
-         * @param \WP_Customize_Manager $wp_customize class object instants
-         *
-         * @access private
-         */
-        private function addSection() {
-            $params = $this->getSectionParams();
-            if ( isset( $this->panel_id ) ) {
-                $params[ 'panel' ] = $this->panel_id;
-            }
-            /* TODO implements auto priority settings
-            if ( ! in_array( 'priority', $params ) ) {
-                $sections = $wp_customize->sections();
-                foreach($sections as $section) {
-                    silverwp_debug_array($section->priority);
-                }
-                //end();
-            }*/
+			if ( $this->debug ) {
+				Debug::dumpPrint( $params );
+			}
+			\Kirki::add_section( $this->getName(), $params );
+			$this->createControls();
+		}
 
-            \Kirki::add_section( $this->name, $params);
+		/**
+		 * Add section arguments. An associative array containing arguments for the control.
+		 * array('title' => '', 'priority' => '', 'description' => '')
+		 *
+		 * @return array
+		 * @access protected
+		 * @link   http://codex.wordpress.org/Class_Reference/WP_Customize_Manager/add_section
+		 * @abstract
+		 */
+		protected abstract function setUp();
 
-            //$wp_customize->add_section( $this->name, $params );
-        }
+		/**
+		 *
+		 * List of all sections controls fields
+		 *
+		 * @return array
+		 * @access public
+		 * @abstract
+		 */
+		protected abstract function createControls();
 
-        /**
-         * Add section arguments. An associative array containing arguments for the control.
-         * array('title' => '', 'priority' => '', 'description' => '')
-         *
-         * @return array
-         * @access protected
-         * @link http://codex.wordpress.org/Class_Reference/WP_Customize_Manager/add_section
-         * @abstract
-         */
-        protected abstract function getSectionParams();
+		/**
+		 *
+		 * Get section name
+		 *
+		 * @return string
+		 * @access public
+		 */
+		public function getName() {
+			return sanitize_title( $this->name );
+		}
 
-        /**
-         *
-         * List of all sections controls fields
-         *
-         * @return array
-         * @access public
-         * @abstract
-         */
-        protected abstract function createControls();
+		/**
+		 *
+		 * Add control field to section
+		 *
+		 * @param \SilverWp\Customizer\Control\ControlInterface $control
+		 *
+		 * @access public
+		 */
+		public function addControl( ControlInterface $control ) {
+			$control->setSectionName( $this->getName() );
+			$settings                              = $control->getSettings();
+			$this->controls[ $control->getName() ] = $control;
+			$this->controls_settings[]             = $settings;
 
-        /**
-         *
-         * Get section name
-         *
-         * @return string
-         * @access public
-         */
-        public function getName() {
-            return $this->name;
-        }
+			if ( ! in_array( 'priority', $settings ) ) {
+				end( $this->controls_settings );
+				$last_key = key( $this->controls_settings );
+				$control->setPriority( $last_key );
+				reset( $this->controls_settings );
+			}
+			\Kirki::add_field( CustomizerAbstract::getId(), $settings );
+		}
 
-        /**
-         *
-         * Add control field to section
-         *
-         * @param \SilverWp\Customizer\Control\ControlInterface $control
-         *
-         * @access public
-         */
-        public function addControl( ControlInterface $control ) {
-            $control->setSectionName( $this->getName() );
-            $settings = $control->getSettings();
-            $this->controls[ $control->getName() ] = $control;
-            $this->controls_settings[] = $settings;
+		/**
+		 *
+		 * Flip array from array( value => label) to array (label => value)
+		 *
+		 * @param array $data
+		 *
+		 * @param bool  $empty add empty element to beginning of array
+		 *
+		 * @return array
+		 * @access public
+		 * @static
+		 */
+		public static function flipSourceData( array $data, $empty = false ) {
+			$return = array();
 
-            if ( ! in_array( 'priority', $settings ) ) {
-                end( $this->controls_settings );
-                $last_key = key( $this->controls_settings );
-                $control->setPriority( $last_key );
-                reset( $this->controls_settings );
-            }
-        }
+			if ( $empty ) {
+				$return[''] = '';
+			}
 
-        /**
-         *
-         * Flip array from array( value => label) to array (label => value)
-         *
-         * @param array $data
-         *
-         * @param bool  $empty add empty element to beginning of array
-         *
-         * @return array
-         * @access public
-         * @static
-         */
-        public static function flipSourceData( array $data, $empty = false ) {
-            $return = array();
+			foreach ( $data as $value ) {
+				if ( isset( $value['img'] ) ) {
+					$return[ $value['value'] ] = $value['img'];
+				} else {
+					$return[ $value['value'] ] = $value['label'];
+				}
+			}
 
-            if ( $empty ) {
-                $return[ '' ] = '';
-            }
+			return $return;
+		}
 
-            foreach ( $data as $value ) {
-                if ( isset( $value[ 'img' ] ) ) {
-                    $return[ $value[ 'value' ] ] = $value[ 'img' ];
-                } else {
-                    $return[ $value[ 'value' ] ] = $value[ 'label' ];
-                }
-            }
-
-            return $return;
-        }
-
-        /**
-         *
-         * Get all controls for current section
-         *
-         * @return array
-         * @access public
-         */
-        public function getControls() {
-            return $this->controls;
-        }
-    }
+		/**
+		 *
+		 * Get all controls for current section
+		 *
+		 * @return array
+		 * @access public
+		 */
+		public function getControls() {
+			return $this->controls;
+		}
+	}
 }

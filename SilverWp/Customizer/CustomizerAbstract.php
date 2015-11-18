@@ -43,7 +43,7 @@ if ( ! class_exists( '\SilverWp\Customizer\CustomizerAbstract' ) ) {
 	 * @abstract
 	 */
 	abstract class CustomizerAbstract extends SingletonAbstract
-		implements CustomizerInterface, Core {
+		implements CustomizerInterface {
 		/**
 		 * Kirki string translation
 		 *
@@ -184,7 +184,6 @@ if ( ! class_exists( '\SilverWp\Customizer\CustomizerAbstract' ) ) {
 			add_action( 'wp_enqueue_scripts', array( $this, 'generatePreview' ), 101 );
 			add_action( 'customize_preview_init', array( $this, 'generatePreview' ), 102 );
 			add_action( 'customize_save_after', array( $this, 'generateAfterSave' ), 151 );
-			add_action( 'kirki/config', array( $this, 'init' ) );
 
 			$this->config();
 
@@ -306,28 +305,6 @@ if ( ! class_exists( '\SilverWp\Customizer\CustomizerAbstract' ) ) {
 				'sans-serif'            => Translate::x( 'Sans Serif', 'font style' ),
 				'monospace'             => Translate::x( 'Monospace', 'font style' ),
 			);
-		}
-
-		/**
-		 * Init configuration
-		 *
-		 * @return array
-		 * @access public
-		 * @link   http://kirki.org/#configuration
-		 */
-		public function init() {
-			$config = array(
-				'logo_image'    => $this->logo_image,
-				'description'   => $this->description,
-				'url_path'      => $this->url_path,
-				//'color_accent'  => $this->color_accent,
-				//'color_back'    => $this->color_back,
-				'textdomain'    => Translate::$text_domain,
-				'stylesheet_id' => self::$stylesheet_id,
-				'i18n'          => $this->strings,
-			);
-
-			return $config;
 		}
 
 		/**

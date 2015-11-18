@@ -18,6 +18,7 @@
  */
 namespace SilverWp\Customizer\Panel;
 
+use SilverWp\Customizer\Section\SectionAbstract;
 use SilverWp\Customizer\Section\SectionInterface;
 
 
@@ -46,11 +47,11 @@ interface PanelInterface {
      *
      * Add section to panel container
      *
-     * @param \SilverWp\Customizer\Section\SectionInterface $section
+     * @param \SilverWp\Customizer\Section\SectionAbstract $section
      *
      * @access public
      */
-    public function addSection( SectionInterface $section );
+    public function addSection( SectionAbstract $section );
 
     /**
      * Get all registered sections
@@ -59,4 +60,5 @@ interface PanelInterface {
      * @access public
      */
     public function getSections();
+
 }

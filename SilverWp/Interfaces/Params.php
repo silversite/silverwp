@@ -1,13 +1,14 @@
 <?php
+
 /*
  * Copyright (C) 2014 Michal Kalkowski <michal at silversite.pl>
  *
- * SilverWp is free software; you can redistribute it and/or
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
  *
- * SilverWp is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -16,43 +17,48 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-namespace SilverWp\Customizer\Section;
+
+namespace SilverWp\Interfaces;
 
 
 /**
- * Customizer Section interface
+ *
+ * 
  *
  * @category   WordPress
  * @package    SilverWp
- * @subpackage Customizer\Sections
+ * @subpackage SilverWp\Interfaces
  * @author     Michal Kalkowski <michal at silversite.pl>
- * @copyright  SilverSite.pl (c) 2015
+ * @copyright  SilverSite.pl 2015
  * @version    0.6
  */
-interface SectionInterface {
+interface Params {
 	/**
-	 * Get section name
+	 * Add single param
 	 *
-	 * @return string
+	 * @param string $name
+	 * @param mixed  $value
+	 *
+	 * @return mixed
 	 * @access public
 	 */
-	public function getName();
+	public function addParam( $name, $value );
 
 	/**
-	 * Get all registered controls for section
+	 * Get all params
 	 *
 	 * @return array
 	 * @access public
 	 */
-	public function getControls();
+	public function getParams();
 
 	/**
-	 * Set panel unique id
+	 * Set params
 	 *
-	 * @param string $panel_id
+	 * @param array $params
 	 *
 	 * @return $this
 	 * @access public
 	 */
-	public function setPanelId( $panel_id );
+	public function setParams( array $params );
 }

@@ -18,138 +18,129 @@
  */
 namespace SilverWp\Customizer\Panel;
 
+use SilverWp\Customizer\Section\SectionAbstract;
 use SilverWp\Customizer\Section\SectionInterface;
 use SilverWp\Debug;
+use SilverWp\ParamsAbstract;
 
 if ( ! class_exists( 'SilverWp\Customizer\Panel\PanelAbstract' ) ) {
 
-    /**
-     * Base customizer panel class
-     *
-     * @category WordPress
-     * @package SilverWp
-     * @subpackage Wp\Customizer\Panel
-     * @author Michal Kalkowski <michal at silversite.pl>
-     * @copyright Dynamite-Studio.pl & silversite.pl 2015
-     * @version $Revision:$
-     * @abstract
-     */
-    abstract class PanelAbstract implements PanelInterface {
+	/**
+	 * Base customizer panel class
+	 *
+	 * @category   WordPress
+	 * @package    SilverWp
+	 * @subpackage Customizer\Panel
+	 * @author     Michal Kalkowski <michal at silversite.pl>
+	 * @copyright  SilverSite.pl (c) 2015
+	 * @version    0.6
+	 * @abstract
+	 */
+	abstract class PanelAbstract extends ParamsAbstract
+		implements PanelInterface {
 
-        /**
-         * Unique panel id
-         *
-         * @var string
-         * @access protected
-         */
-        protected $panel_id;
+		/**
+		 * Unique panel id
+		 *
+		 * @var string
+		 * @access protected
+		 */
+		protected $panel_id;
 
-        /**
-         *
-         * Section handler
-         *
-         * @var array
-         * @access private
-         */
-        private $sections = array();
+		/**
+		 *
+		 * Section handler
+		 *
+		 * @var array
+		 * @access private
+		 */
+		private $sections = array();
 
-        /**
-         *
-         * Class constructor register customizer
-         *
-         * @access public
-         */
-        public function __construct() {
-            //add_action( 'customize_register', array( $this, 'init' ), 99 );
-            $this->init();
-        }
+		/**
+		 * Display dumps
+		 *
+		 * @var bool
+		 */
+		protected $debug = false;
 
-        /**
-         *
-         * Initialize panel
-         *
-         * @throws \SilverWp\Customizer\Panel\Exception
-         * @access public
-         */
-        public function init() {
-            $this->addPanel();
-            $this->createSections();
-        }
+		/**
+		 *
+		 * Class constructor register customizer
+		 *
+		 * @access public
+		 */
+		public function __construct() {
+			$this->setUp();
+			$this->addPanel();
+		}
 
-        /**
-         *
-         * Add new panel to customizer
-         *
-         * @throws \SilverWp\Customizer\Panel\Exception
-         * @access private
-         */
-        private function addPanel() {
-            if ( ! isset( $this->panel_id ) ) {
-                throw new Exception(
-                    Translate::translate( 'If You want add panel to your section first define panel_id class property.' )
-                );
-            }
-            $params = $this->createPanelParams();
+		/**
+		 *
+		 * Add panel to customizer
+		 *
+		 * @throws \SilverWp\Customizer\Panel\Exception
+		 * @access public
+		 */
+		private function addPanel() {
+			if ( ! isset( $this->panel_id ) ) {
+				throw new Exception(
+					Translate::translate( 'If You want add panel to your section first define panel_id class property.' )
+				);
+			}
+			$params = $this->getParams();
+			if ( $this->debug ) {
+				Debug::dumpPrint( $this->sections );
+			}
 
-            \Kirki::add_panel( $this->panel_id, $params);
-        }
+			\Kirki::add_panel( sanitize_title($this->panel_id), $params );
+		}
 
-        /**
-         *
-         * Create sections elements add to panel
-         *
-         * @access protected
-         * @abstract
-         */
-        protected abstract function createSections();
+		/**
+		 *
+		 * Create sections elements add to panel
+		 *
+		 * @access protected
+		 * @abstract
+		 */
+		protected abstract function setUp();
 
-        /**
-         *
-         * An associative array with panel params:
-         * array(
-         *      'priority'       => 10,
-         *      'title'          => esc_html__('Theme Options', 'mytheme'),
-         *      'description'    => esc_html__('Several settings pertaining my theme', 'mytheme'),
-         * )
-         *
-         * @return array
-         * @access protected
-         * @abstract
-         */
-        protected abstract function createPanelParams();
+		/**
+		 *
+		 * Add section to panel container
+		 *
+		 * @param \SilverWp\Customizer\Section\SectionAbstract $section
+		 *
+		 * @access public
+		 */
+		public function addSection( SectionAbstract $section ) {
+			$section->setPanelId( $this->getPanelId() );
+			$this->sections[] = $section;
+			if ( $this->debug ) {
+				Debug::dumpPrint( $this->sections );
+			}
+			$section->addSection();
+		}
 
-        /**
-         *
-         * Add section to panel container
-         *
-         * @param \SilverWp\Customizer\Section\SectionInterface $section
-         *
-         * @access public
-         */
-        public function addSection( SectionInterface $section ) {
-            $section->setPanelId( $this->getPanelId() );
-            $this->sections[] = $section;
-        }
+		/**
+		 *
+		 * Get unique panel id
+		 *
+		 * @return string
+		 * @access public
+		 */
+		public function getPanelId() {
+			return $this->panel_id;
+		}
 
-        /**
-         *
-         * Get unique panel id
-         *
-         * @return string
-         * @access public
-         */
-        public function getPanelId() {
-            return $this->panel_id;
-        }
+		/**
+		 * Get all registered sections
+		 *
+		 * @return array
+		 * @access public
+		 */
+		public function getSections() {
+			return $this->sections;
+		}
 
-        /**
-         * Get all registered sections
-         *
-         * @return array
-         * @access public
-         */
-        public function getSections() {
-            return $this->sections;
-        }
-    }
+	}
 }
