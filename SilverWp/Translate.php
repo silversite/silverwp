@@ -43,17 +43,26 @@ if ( ! class_exists( '\SilverWp\Translate' ) ) {
          * @var string
          */
         public static $text_domain = SILVERWP_THEME_TEXT_DOMAIN;
-        /**
-         *
-         * Register theme text domain and language path
-         *
-         * @static
-         * @access public
-         */
-        public static function init() {
 
-            load_theme_textdomain( self::$text_domain, self::$language_path);
-        }
+	    /**
+	     *
+	     * Register theme text domain and language path
+	     *
+	     * @static
+	     * @access public
+	     *
+	     * @param null|string $text_domain
+	     * @param null|string $language_path
+	     */
+	    public static function init( $text_domain = null, $language_path = null ) {
+		    if ( ! is_null( $text_domain ) ) {
+			    self::$text_domain = $text_domain;
+		    }
+		    if ( ! is_null( $language_path ) ) {
+			    self::$language_path = $language_path;
+		    }
+		    load_theme_textdomain( self::$text_domain, self::$language_path );
+	    }
 
         /**
          * Translate text
