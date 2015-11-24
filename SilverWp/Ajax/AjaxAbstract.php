@@ -329,7 +329,6 @@ if ( ! class_exists( 'SilverWp\Ajax\AjaxAbstract' ) ) {
 		 * @return boolean
 		 * @static
 		 * @access public
-		 * @todo   move $_SERVER add filters
 		 */
 		public static function isAjax() {
 			if ( function_exists( 'apache_request_headers' ) ) {
@@ -337,8 +336,11 @@ if ( ! class_exists( 'SilverWp\Ajax\AjaxAbstract' ) ) {
 			} else {
 				$headers = $_SERVER;
 			}
-			if ( isset( $headers['X-Requested-With'] )
-			     && $headers['X-Requested-With'] == 'XMLHttpRequest'
+			// fix some servers have lower other upper case in keys
+			$headers = array_change_key_case( $headers, CASE_LOWER );
+
+			if ( isset( $headers['x-requested-with'] )
+			     && $headers['x-requested-with'] == 'XMLHttpRequest'
 			) {
 				return true;
 			}
