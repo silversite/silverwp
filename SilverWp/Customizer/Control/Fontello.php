@@ -22,6 +22,7 @@ use SilverWp\Customizer\Section\SectionAbstract;
 use SilverWp\Debug;
 use SilverWp\FileSystem;
 use SilverWp\Helper\MetaBox;
+use SilverWp\SilverWp;
 
 if ( ! class_exists( '\SilverWp\Customizer\Control\Fontello' ) ) {
 
@@ -46,12 +47,11 @@ if ( ! class_exists( '\SilverWp\Customizer\Control\Fontello' ) ) {
 		 */
 		public function __construct( $name ) {
 			parent::__construct( $name );
-			$css_path = FileSystem::getDirectory( 'fonts_path' ) . 'fontello.css';
-			$items   = SectionAbstract::flipSourceData(
-				MetaBox::getFontelloIcons( 'icon', $css_path, 'silverwp_fontello_icons' )
-			);
-
-			$this->setOptions( $items );
+			$icons = \SilverWp\Sources\get_icons();
+			if ($icons) {
+				$items   = SectionAbstract::flipSourceData( $icons );
+				$this->setOptions( $items );
+			}
 		}
 	}
 }

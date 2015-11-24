@@ -18,9 +18,7 @@
  */
 namespace SilverWp\Helper\Control;
 
-use SilverWp\Debug;
 use SilverWp\FileSystem;
-use SilverWp\Helper\MetaBox;
 
 if ( ! class_exists( '\SilverWp\Helper\Control\Fontello' ) ) {
 
@@ -52,10 +50,10 @@ if ( ! class_exists( '\SilverWp\Helper\Control\Fontello' ) ) {
         public function __construct( $name ) {
             parent::__construct( $name );
             //add fontello icons
-            $css_uri = FileSystem::getDirectory( 'fonts_uri' ) . 'fontello.css';
-            $items = MetaBox::getFontelloIcons( 'icon', $css_uri, 'silverwp_fontello_icons' );
-            $this->setOptions( $items );
-        }
+	        if ( $items = \SilverWp\Sources\get_icons() ) {
+		        $this->setOptions( $items );
+	        }
+	    }
 
         /**
          *
@@ -65,8 +63,8 @@ if ( ! class_exists( '\SilverWp\Helper\Control\Fontello' ) ) {
          * @access public
          */
         public function enqueueAssets() {
-	        $fonts_uri = FileSystem::getDirectory( 'fonts_uri' );
-            wp_register_style( 'fontello_icons', $fonts_uri . 'fontello.css' );
+	        $icons_uri = FileSystem::getDirectory( 'icons_uri' );
+            wp_register_style( 'fontello_icons', $icons_uri );
             wp_enqueue_style( 'fontello_icons' );
         }
 
@@ -84,5 +82,6 @@ if ( ! class_exists( '\SilverWp\Helper\Control\Fontello' ) ) {
 
             return $this;
         }
+
     }
 }
