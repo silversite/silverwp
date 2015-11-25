@@ -86,17 +86,20 @@ if ( ! class_exists( 'SilverWp\Helper\Control\SidebarPosition' ) ) {
          */
         public static function isDisplayed() {
             //fix Ticket #220
-            if ( ( is_search() && is_home() ) || is_tag() || is_date() || is_archive() ) {
+	        if ( ( is_search() && is_home() )
+	             || is_tag()
+	             || is_date()
+	             || is_archive()
+	        ) {
                 $post_id   = Option::get_option( 'page_for_posts' );
                 $post_type = 'page';
             } else {
                 $page_object = get_queried_object();
                 $post_id     = get_queried_object_id();
-                $post_type   = isset( $page_object->post_type )
-                    ? $page_object->post_type : 'posts';
+                $post_type   = isset( $page_object->post_type ) ? $page_object->post_type : 'posts';
             }
 
-			$sidebar = MetaBox::isSidebar( $post_type, $post_id );
+	        $sidebar = \SilverWp\get_meta_box( $post_type, 'sidebar', $post_id );
 
 			if ( ( is_search()
 			       || is_author()
