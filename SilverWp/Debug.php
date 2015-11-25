@@ -38,7 +38,8 @@ if ( ! class_exists( 'SilverWp\Debug' ) ) {
          * @static
          */
 	    public static $allwoed_ips = array(
-		    '31.183.61.125', '127.0.0.1', '31.182.69.228', '192.168.10.1'
+		    '31.183.61.125', '127.0.0.1', '31.182.69.228',
+		    '192.168.10.1', '192.168.50.1'
 	    );
         /**
          * Prate dump variable used var_dump function.

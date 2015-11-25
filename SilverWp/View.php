@@ -62,16 +62,12 @@ class View extends SingletonAbstract {
 			throw new Exception( "View file not found: $view_file" );
 		}
 		\extract( $data );
-		// fix bug when data is form Ajaxt request
-		if ( AjaxAbstract::isAjax() ) {
-			return include $view_file;
-		} else {
-			ob_start();
-			include $view_file;
-			$content = ob_get_clean();
+		ob_start();
+		include $view_file;
+		$content = ob_get_clean();
 
-			return $content;
-		}
+		return $content;
+
 	}
 
 	/**

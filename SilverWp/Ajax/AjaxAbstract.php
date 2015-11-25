@@ -311,16 +311,13 @@ if ( ! class_exists( 'SilverWp\Ajax\AjaxAbstract' ) ) {
 			}
 			try {
 				$view_path = FileSystem::getDirectory( 'views' );
-				$view      = View::getInstance()->load( $view_path . 'ajax/'
-				                                        . $view_file, $data );
-				//some servers don't display content with out echo
-//				echo $view;
-				//fix display 0
-				return $view;
+				$view      = View::getInstance()->load( $view_path . 'ajax/'. $view_file, $data );
+
+				//fix bug with display 0 or 1 in AJAX response
+				die( $view );
 			} catch ( Exception $ex ) {
 				echo $ex->displayAdminNotice( $ex->getMessage() );
 			}
-			exit;
 		}
 
 		/**
