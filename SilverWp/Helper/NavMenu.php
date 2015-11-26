@@ -44,7 +44,6 @@ class NavMenu extends SingletonAbstract {
     protected function __construct() {
         \add_filter( 'nav_menu_css_class', array( $this, 'addActive' ) );
         \add_filter( 'wp_nav_menu_items', array( $this, 'addSearchForm' ), 10, 2 );
-        $this->registerMenu();
     }
 
     /**
@@ -119,19 +118,6 @@ class NavMenu extends SingletonAbstract {
         }
 
         return $items;
-    }
-
-    /**
-     * Register new menu
-     *
-     * @access public
-     * @return void
-     */
-    public function registerMenu() {
-        $menu = array(
-            'footer' => Translate::translate( 'Footer menu' ),
-        );
-        register_nav_menus( $menu );
     }
 
     /**
