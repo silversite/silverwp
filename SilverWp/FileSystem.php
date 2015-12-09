@@ -44,21 +44,6 @@ if ( ! class_exists( '\SilverWp\FileSystem' ) ) {
         protected function __construct() {
         }
 
-        /**
-         * Normalize path
-         *
-         * @param string $path path to file
-         *
-         * @return string
-         * @access public
-         */
-        public function normalizePath( $path ) {
-            $path = str_replace( '\\', DIRECTORY_SEPARATOR, $path );
-
-            $path = rtrim( $path, '/' ) . '/';
-
-            return $path;
-        }
 
         /**
          * Add directory to future use
@@ -70,7 +55,7 @@ if ( ! class_exists( '\SilverWp\FileSystem' ) ) {
          */
         public function addDirectory( $key, $directory ) {
             $this->addVpDirectory( $key, $directory );
-            $this->dirs[ $key ] = $this->normalizePath( $directory );
+            $this->dirs[ $key ] = trailingslashit( $directory );
 
             return $this;
         }

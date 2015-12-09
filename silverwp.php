@@ -8,14 +8,13 @@
  * that starts the plugin.
  *
  * @link              https://github.com/padalec/silverwp.git
- * @since             0.1
  * @package           SilverWp
  * @category          wordpress-plugin
  *
  * @wordpress-plugin
  * Plugin Name:       SilverWp
  * Description:       SilverWp is a framework to help developers create themes or plugins
- * Version:           0.5
+ * Version:           0.7
  * Author:            Michal Kalkowski
  * Author URI:        http://www.silversite.pl/
  * License:           GPL-2.0+
@@ -31,7 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once 'vendor/autoload.php';
 try {
-	SilverWp::getInstance()->isPlugin( new \SilverWp\Plugin() );
+	SilverWp::getInstance()->isPlugin( new Plugin() );
 
 	$views  = SILVERWP_LIBS_PATH . 'ssvafpress/views';
 	$assets_uri = plugin_dir_url( __FILE__ ) . 'assets';
@@ -39,10 +38,8 @@ try {
 	FileSystem::getInstance()->addDirectory( 'assets_uri', $assets_uri );
 	FileSystem::getInstance()->addDirectory( 'views', $views );
 
-	Translate::$language_path = plugin_dir_path( __FILE__ ) . 'languages/';
-	Translate::$text_domain = 'silverwp';
-	Translate::init();
+	Translate::init( 'silverwp', plugin_dir_path( __FILE__ ) . 'languages/' );
 
-} catch ( \SilverWp\Exception $ex ) {
+} catch ( Exception $ex ) {
     $ex->catchException();
 }

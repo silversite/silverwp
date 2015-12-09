@@ -37,7 +37,7 @@ if ( ! class_exists( 'SilverWp\Debug' ) ) {
          * @var array
          * @static
          */
-	    public static $allwoed_ips = array(
+	    public static $allowed_ips = array(
 		    '31.183.61.125', '127.0.0.1', '31.182.69.228',
 		    '192.168.10.1', '192.168.50.1'
 	    );
@@ -51,7 +51,7 @@ if ( ! class_exists( 'SilverWp\Debug' ) ) {
          * @static
          */
         public static function dump( $variable, $label = null ) {
-	        if ( in_array( $_SERVER['REMOTE_ADDR'], self::$allwoed_ips ) ) {
+	        if ( in_array( $_SERVER['REMOTE_ADDR'], self::$allowed_ips ) ) {
 		        if ( ! is_null( $label ) ) {
 	                echo '<p><strong>' . $label . '</strong></p>';
 	            }
@@ -72,7 +72,7 @@ if ( ! class_exists( 'SilverWp\Debug' ) ) {
          * @access public
          */
         public static function dumpPrint( $variable, $label = null ) {
-	        if ( in_array( $_SERVER['REMOTE_ADDR'], self::$allwoed_ips ) ) {
+	        if ( in_array( $_SERVER['REMOTE_ADDR'], self::$allowed_ips ) ) {
 		        if ( ! is_null( $label ) ) {
 			        echo '<p><strong>' . $label . '</strong></p>';
 		        }
