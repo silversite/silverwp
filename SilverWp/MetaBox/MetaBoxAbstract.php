@@ -474,15 +474,17 @@ if ( ! class_exists( 'SilverWp\MetaBox\MetaBoxAbstract' ) ) {
 
 			foreach ( $this->filter_controls as $control ) {
 				// Sanitize the user input.
-				$post_value = $_POST[ $this->getId() ][ $control->getName() ];
-				//todo change this is not universal
-				//todo maybe get value from control class?
-				if ( is_array( $post_value ) ) {
-					$post_value = $post_value[ 0 ];
+				if ( isset( $_POST[ $this->getId() ][ $control->getName() ] ) ) {
+					$post_value = $_POST[ $this->getId() ][ $control->getName() ];
+					//todo change this is not universal
+					//todo maybe get value from control class?
+					if ( is_array( $post_value ) ) {
+						$post_value = $post_value[ 0 ];
+					}
+					$value = sanitize_text_field( $post_value );
+					// Update the meta field.
+					update_post_meta( $post_id, $control->getName(), $value );
 				}
-				$value = sanitize_text_field( $post_value );
-				// Update the meta field.
-				update_post_meta( $post_id, $control->getName(), $value );
 			}
 
 			return $post_id;
