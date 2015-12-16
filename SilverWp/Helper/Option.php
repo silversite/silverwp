@@ -108,7 +108,7 @@ class Option {
      */
     public static function get_theme_option( $name, $to_array = false ) {
         $options = get_option( THEME_OPTION_PREFIX );
-        if ( $to_array ) {
+        if ( $options && $to_array ) {
             $options = UtlArray::string_to_array( $options );
         }
         return isset( $options[ $name ] ) ? $options[ $name ] : false;

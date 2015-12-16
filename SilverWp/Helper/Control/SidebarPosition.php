@@ -97,6 +97,7 @@ if ( ! class_exists( 'SilverWp\Helper\Control\SidebarPosition' ) ) {
                 $page_object = get_queried_object();
                 $post_id     = get_queried_object_id();
                 $post_type   = isset( $page_object->post_type ) ? $page_object->post_type : 'post';
+
             }
 
 	        $sidebar = \SilverWp\get_meta_box( $post_type, 'sidebar', $post_id );

@@ -121,21 +121,24 @@ class Social {
         $accounts_list  = Option::get_theme_option( 'social_accounts', true );
         $provider_list  = silverwp_get_social_providers();
         $social = array();
-        foreach ( $provider_list as $provider ) {
-            foreach ( $accounts_list as $slug => $value ) {
-                if ( sanitize_title( $provider[ 'name' ] ) == $slug && ! empty( $value[ 'url' ] ) ) {
-                    $social[ ] = array(
-                        'name'  => $provider[ 'name' ],
-                        'url'   => $value[ 'url' ],
-                        'order' => $value[ 'order' ],
-                        'icon'  => $provider[ 'icon' ],
-                        'slug'  => $slug,
-                    );
-                }
-            }
-        }
-        UtlArray::array_sort_by_column( $social, 'order' );
-
+	    if ( $provider_list && $accounts_list ) {
+		    foreach ( $provider_list as $provider ) {
+			    foreach ( $accounts_list as $slug => $value ) {
+				    if ( sanitize_title( $provider['name'] ) == $slug
+				         && ! empty( $value['url'] )
+				    ) {
+					    $social[] = array(
+						    'name' => $provider['name'],
+						    'url' => $value['url'],
+						    'order' => $value['order'],
+						    'icon' => $provider['icon'],
+						    'slug' => $slug,
+					    );
+				    }
+			    }
+		    }
+		    UtlArray::array_sort_by_column( $social, 'order' );
+	    }
         return $social;
     }
 
