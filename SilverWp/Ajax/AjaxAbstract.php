@@ -85,7 +85,12 @@ if ( ! class_exists( 'SilverWp\Ajax\AjaxAbstract' ) ) {
 		 */
 		protected function __construct() {
 			if ( \is_null( $this->name ) ) {
-				throw new Exception( Translate::translate( 'Variable name is requaied and can\'t be empty.' ) );
+				$parent_class = get_called_class();
+				throw new Exception(
+					Translate::translate(
+						'Variable %s::$name is requaied and can\'t be empty.', $parent_class
+					)
+				);
 			}
 			if ( ! is_null( $this->ajax_js_file ) ) {
 				\add_action( 'wp_loaded', array( $this, 'scriptsRegister' ) );
