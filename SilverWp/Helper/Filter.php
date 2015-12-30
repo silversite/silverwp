@@ -24,12 +24,12 @@ class Filter
 
     public static function get_var($name, $method = FILTER_DEFAULT, $default = NULL)
     {
-        return filter_input(INPUT_GET, $name, $method, array('options' => array('defualt' => $default)));
+        return filter_input(INPUT_GET, $name, $method, array('options' => array('default' => $default)));
     }
 
     public static function post_var($name, $method = FILTER_DEFAULT, $default = NULL)
     {
-        return filter_input(INPUT_POST, $name, $method, array('options' => array('defualt' => $default)));
+        return filter_input(INPUT_POST, $name, $method, array('options' => array('default' => $default)));
     }
 
     /**

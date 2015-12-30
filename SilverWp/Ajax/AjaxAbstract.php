@@ -49,7 +49,7 @@ if ( ! class_exists( 'SilverWp\Ajax\AjaxAbstract' ) ) {
 		 * @var string
 		 * @access protected
 		 */
-		protected $ajax_js_file = null;
+		protected $ajax_js_file = 'main.js';
 
 		/**
 		 *
@@ -58,7 +58,7 @@ if ( ! class_exists( 'SilverWp\Ajax\AjaxAbstract' ) ) {
 		 * @var string
 		 * @access protected
 		 */
-		protected $ajax_handler = 'SilverWpAjax';
+		protected $ajax_handler = 'sage_js';
 
 		/**
 		 * Ajax response function name
@@ -175,7 +175,7 @@ if ( ! class_exists( 'SilverWp\Ajax\AjaxAbstract' ) ) {
 		public function scriptsLocalize() {
 			$this->nonce = wp_create_nonce( $this->getNonceName() );
 
-			return wp_localize_script(
+			wp_localize_script(
 				$this->ajax_handler,
 				$this->name,
 				array(
@@ -229,23 +229,25 @@ if ( ! class_exists( 'SilverWp\Ajax\AjaxAbstract' ) ) {
 				$request = Filter::get_var( $name, $filter_options, $default );
 			} elseif ( $this->isPost( $name ) ) {
 				$request = Filter::post_var( $name, $filter_options, $default );
-			} /* else {
-          throw new Exception(Translate::translate('Request param ('.$name.') isn\'t send by POST or GET.'));
-          } */
+			} else {
+				$request = $default;
+			}
 
 			return $request;
 		}
 
 		/**
 		 *
-		 * request is $_GET data
+		 * Check if request is by $_GET data
 		 *
 		 * @access private
-		 * @return boolean if the request is $_GET return true else false
+		 *
+		 * @param string $name
+		 *
+		 * @return bool
 		 */
 		private function isGet( $name ) {
-			//TODO has_var
-			if ( \is_null( Filter::get_var( $name ) ) ) {
+			if ( filter_has_var( INPUT_GET, $name ) ) {
 				return false;
 			}
 
@@ -254,14 +256,16 @@ if ( ! class_exists( 'SilverWp\Ajax\AjaxAbstract' ) ) {
 
 		/**
 		 *
-		 * request is $_POST data
+		 * Check if request variable is from $_POST
 		 *
 		 * @access private
-		 * @return boolean if the request is $_GET return true else false
+		 *
+		 * @param string $name
+		 *
+		 * @return bool
 		 */
 		private function isPost( $name ) {
-			//TODO has_var
-			if ( \is_null( Filter::post_var( $name ) ) ) {
+			if ( filter_has_var( INPUT_POST, $name ) ) {
 				return false;
 			}
 
