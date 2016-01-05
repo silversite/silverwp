@@ -248,10 +248,10 @@ if ( ! class_exists( 'SilverWp\Ajax\AjaxAbstract' ) ) {
 		 */
 		private function isGet( $name ) {
 			if ( filter_has_var( INPUT_GET, $name ) ) {
-				return false;
+				return true;
 			}
 
-			return true;
+			return false;
 		}
 
 		/**
@@ -266,10 +266,10 @@ if ( ! class_exists( 'SilverWp\Ajax\AjaxAbstract' ) ) {
 		 */
 		private function isPost( $name ) {
 			if ( filter_has_var( INPUT_POST, $name ) ) {
-				return false;
+				return true;
 			}
 
-			return true;
+			return false;
 		}
 
 		/**
