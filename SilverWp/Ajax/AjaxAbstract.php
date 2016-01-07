@@ -49,7 +49,7 @@ if ( ! class_exists( 'SilverWp\Ajax\AjaxAbstract' ) ) {
 		 * @var string
 		 * @access protected
 		 */
-		protected $ajax_js_file = 'main.js';
+		protected $ajax_js_file = null;
 
 		/**
 		 *
@@ -128,15 +128,17 @@ if ( ! class_exists( 'SilverWp\Ajax\AjaxAbstract' ) ) {
 		 * @access public
 		 */
 		public function scriptsRegister() {
-			\wp_register_script(
-				$this->ajax_handler
-				, $this->getJsUri() . $this->ajax_js_file
-				, array(
-					'jquery',
-				)
-				, SILVERWP_VER
-				, true
-			);
+			if ( ! is_null( $this->ajax_js_file ) ) {
+				\wp_register_script(
+					$this->ajax_handler
+					, $this->getJsUri() . $this->ajax_js_file
+					, array(
+						'jquery',
+					)
+					, wp_get_theme()->Version
+					, true
+				);
+			}
 		}
 
 		/**
