@@ -137,4 +137,17 @@ class Page {
 
 		return $page_id;
 	}
+
+	/**
+	 * @param string $page_template
+	 *
+	 * @return false|string
+	 * @access public
+	 * @static
+	 */
+	public static function getPageUrlByTemplate( $page_template ) {
+		$page_id = self::getIdByTemplate( $page_template );
+
+		return get_permalink( $page_id );
+	}
 }

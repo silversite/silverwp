@@ -273,27 +273,6 @@ if ( ! class_exists( 'SilverWp\Ajax\AjaxAbstract' ) ) {
 		}
 
 		/**
-		 * request data format
-		 *
-		 * @todo http://stackoverflow.com/questions/17816515/detect-an-ajax-request
-		 * @return type
-		 */
-		protected function requestFormat() {
-			return;
-		}
-
-		/**
-		 *
-		 * respons data format
-		 *
-		 * @todo http://stackoverflow.com/questions/17816515/detect-an-ajax-request
-		 * @return type
-		 */
-		protected function responseFormat() {
-			return;
-		}
-
-		/**
 		 *
 		 * ajax response in json format
 		 *
