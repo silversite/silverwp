@@ -22,7 +22,6 @@ use SilverWp\Ajax\Exception;
 use SilverWp\Debug;
 use SilverWp\FileSystem;
 use SilverWp\Helper\Filter;
-use SilverWp\SilverWp;
 use SilverWp\SingletonAbstract;
 use SilverWp\Translate;
 use SilverWp\View;
@@ -93,21 +92,18 @@ if ( ! class_exists( 'SilverWp\Ajax\AjaxAbstract' ) ) {
 				);
 			}
 			if ( ! is_null( $this->ajax_js_file ) ) {
-				\add_action( 'wp_loaded', array( $this, 'scriptsRegister' ) );
+				add_action( 'wp_loaded', array( $this, 'scriptsRegister' ) );
+				# Could as well be: wp_enqueue_scripts or login_enqueue_scripts
+				add_action( 'wp_enqueue_scripts', array( $this, 'scriptsEnqueue' ) );
 			}
-			# Could as well be: wp_enqueue_scripts or login_enqueue_scripts
-			\add_action( 'wp_enqueue_scripts',
-				array( $this, 'scriptsEnqueue' ) );
-			\add_action( 'wp_enqueue_scripts',
-				array( $this, 'scriptsLocalize' ) );
+
+			add_action( 'wp_enqueue_scripts', array( $this, 'scriptsLocalize' ), 99 );
 
 			# Guests:
-			\add_action( "wp_ajax_nopriv_{$this->name}",
-				array( $this, 'ajaxResponse' ) );
+			add_action( "wp_ajax_nopriv_{$this->name}", array( $this, 'ajaxResponse' ) );
 			# Logged in users:
 			//TODO add iterface and method ajaxPrivResponse
-			\add_action( "wp_ajax_{$this->name}",
-				array( $this, 'ajaxResponse' ) );
+			add_action( "wp_ajax_{$this->name}", array( $this, 'ajaxResponse' ) );
 		}
 
 		/**
@@ -163,7 +159,7 @@ if ( ! class_exists( 'SilverWp\Ajax\AjaxAbstract' ) ) {
 		 * @access public
 		 */
 		public function scriptsEnqueue() {
-			\wp_enqueue_script( $this->ajax_handler );
+			wp_enqueue_script( $this->ajax_handler );
 		}
 
 		/**
@@ -175,6 +171,7 @@ if ( ! class_exists( 'SilverWp\Ajax\AjaxAbstract' ) ) {
 		 * @access public
 		 */
 		public function scriptsLocalize() {
+			Debug::dump('scripts');
 			$this->nonce = wp_create_nonce( $this->getNonceName() );
 
 			wp_localize_script(
