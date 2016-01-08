@@ -171,7 +171,6 @@ if ( ! class_exists( 'SilverWp\Ajax\AjaxAbstract' ) ) {
 		 * @access public
 		 */
 		public function scriptsLocalize() {
-			Debug::dump('scripts');
 			$this->nonce = wp_create_nonce( $this->getNonceName() );
 
 			wp_localize_script(
