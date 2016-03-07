@@ -56,20 +56,17 @@ if ( ! class_exists( 'SilverWp\Helper\Control\SidebarPosition' ) ) {
 				array(
 					'value' => 0,
 					'label' => Translate::translate( 'None' ),
-					'img'   => $images_uri
-					           . 'admin/sidebar/icon_0_sidebar_off.png',
+					'img'   => $images_uri . 'admin/sidebar/icon_0_sidebar_off.png',
 				),
 				array(
 					'value' => 1,
 					'label' => Translate::translate( 'Left sidebar' ),
-					'img'   => $images_uri
-					           . 'admin/sidebar/icon_1_sidebar_off.png',
+					'img'   => $images_uri . 'admin/sidebar/icon_1_sidebar_off.png',
 				),
 				array(
 					'value' => 2,
 					'label' => Translate::translate( 'Right sidebar' ),
-					'img'   => $images_uri
-					           . 'admin/sidebar/icon_2_sidebar_off.png',
+					'img'   => $images_uri . 'admin/sidebar/icon_2_sidebar_off.png',
 				),
 			);
 
@@ -85,37 +82,43 @@ if ( ! class_exists( 'SilverWp\Helper\Control\SidebarPosition' ) ) {
          * @return boolean
          */
         public static function isDisplayed() {
-            //fix Ticket #220
-	        if ( ( is_search() && is_home() )
-	             || is_tag()
-	             || is_date()
-	             || is_archive()
-	        ) {
-                $post_id   = Option::get_option( 'page_for_posts' );
-                $post_type = 'page';
-            } else {
-                $page_object = get_queried_object();
-                $post_id     = get_queried_object_id();
-                $post_type   = isset( $page_object->post_type ) ? $page_object->post_type : 'post';
+			if ( is_front_page() && get_option('show_on_front') === 'page' ) { // Homepage with a static page
+				$post_type = 'page';
+				$post_id = get_option('page_on_front');
+			} elseif ( is_page() ) { // Page single view
+				$post_type = 'page';
+				$post_id     = get_queried_object_id();
+			} elseif ( is_single() ) { // Single view (Post or CPT)
+				$page_object = get_queried_object();
+				$post_type   = isset( $page_object->post_type ) ? $page_object->post_type : 'post';
+				$post_id     = get_queried_object_id();
+			} else { // special views (search, author, tag, date, archive)
+				//$sidebar = \SilverWp\get_theme_option( 'blogposts_sidebar' ) === '0' ? false : true;
+				$sidebar = false;
+			}
+			/*
+			} elseif ( is_search() || is_author() || is_tag() || is_date() || is_archive() ) { // special views
+				//$sidebar = \SilverWp\get_theme_option( 'blogposts_sidebar' ) === '0' ? false : true;
+				$sidebar = false;
+			} else { // single view
+				$page_object = get_queried_object();
+				$post_type   = isset( $page_object->post_type ) ? $page_object->post_type : 'post';
+				$post_id     = get_queried_object_id();
+			}
+			*/
+			if ( isset($post_type) ) { // not special view (single view)
+				$sidebar = \SilverWp\get_meta_box( $post_type, 'sidebar', $post_id );
 
-            }
-
-	        $sidebar = \SilverWp\get_meta_box( $post_type, 'sidebar', $post_id );
-
-			if ( ( is_search()
-			       || is_author()
-			       || is_tag()
-			       || is_date()
-			       || is_archive()
-			     )
-			     && Option::get_theme_option( 'blogposts_sidebar' ) != '0'
-			) {
-				$sidebar = true;
+				if ( $sidebar === false ) { // $sidebar === false --> any value set (post added before theme was turn on)
+					if ( $post_type === 'post' && \SilverWp\get_theme_option( 'blogposts_sidebar' ) !== '0' ) {
+						$sidebar = true;
+					} elseif ( $post_type === 'page' && \SilverWp\get_theme_option( 'pages_sidebar' ) !== '0' ) {
+						$sidebar = true;
+					}
+				}
 			}
 
-			$display = apply_filters( 'sage/display_sidebar', $sidebar );
-
-			return $display;
+			return apply_filters( 'sage/display_sidebar', $sidebar );
 		}
 	}
 }
