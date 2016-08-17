@@ -39,7 +39,8 @@ if ( ! class_exists( 'SilverWp\Debug' ) ) {
          */
 	    public static $allowed_ips = array(
 		    '31.183.61.125', '127.0.0.1', '31.182.69.228',
-		    '192.168.10.1', '192.168.50.1', '31.183.53.127'
+		    '192.168.10.1', '192.168.50.1', '31.183.53.127',
+		    '192.168.11.5', '192.168.11.4'
 	    );
         /**
          * Prate dump variable used var_dump function.

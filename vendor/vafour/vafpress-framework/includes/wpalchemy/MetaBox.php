@@ -449,7 +449,17 @@ class WPAlchemy_MetaBox
 	 * @see		have_fields_and_multi(), have_fields()
 	 */
 	var $_loop_data;
-	
+
+	/**
+	 * WPAlchemy_MetaBox constructor.
+	 * Fix for old class constructor
+	 *
+	 * @param array $arr
+	 */
+	public function __construct($arr) {
+		$this->WPAlchemy_MetaBox($arr);
+	}
+
 	function WPAlchemy_MetaBox($arr)
 	{
 		$this->_loop_data = new stdClass;

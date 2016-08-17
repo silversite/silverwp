@@ -11,7 +11,7 @@
  */
 namespace SilverWp\Helper;
 
-class String {
+class TextFormat {
     /**
      * strip slashes from string
      * @param mixed $value

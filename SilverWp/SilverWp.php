@@ -18,7 +18,7 @@
  */
 namespace SilverWp;
 
-use SilverWp\Helper\String;
+use SilverWp\Helper\TextFormat;
 use SilverWp\Interfaces\Plugin;
 use SilverWp\Widget\Exception;
 use SilverWp\Widget\WidgetInterface;
@@ -233,7 +233,7 @@ if ( ! class_exists( 'SilverWp' ) ) {
 		    foreach ( $files_list as $file ) {
 			    if ( $file != '.' && $file != '..' ) {
 				    $class_file = $widget_path . DIRECTORY_SEPARATOR . $file;
-				    $classes    = String::getClassNameFromFile( $class_file );
+				    $classes    = TextFormat::getClassNameFromFile( $class_file );
 				    foreach ( $classes as $class ) {
 					    if ( class_exists( $class ) ) {
 						    \register_widget( $class );
