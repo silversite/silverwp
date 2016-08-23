@@ -131,16 +131,17 @@ if ( ! class_exists( '\SilverWp\Translate' ) ) {
             return esc_html__( $message_id, self::$text_domain );
         }
 
-        /**
-         *
-         * alias to _e() function
-         *
-         * @param string $message_id
-         *
-         * @static
-         * @access public
-         */
-        public static function e( $message_id ) {
+	    /**
+	     *
+	     * alias to _e() function
+	     *
+	     * @throws Exception
+	     * @internal param string $message_id
+	     *
+	     * @static
+	     * @access   public
+	     */
+        public static function e() {
 	        throw new Exception('Function _e is depraced. Use esc_html__ or wrap by wp_kses()');
             _e( $message_id, self::$text_domain );
         }
