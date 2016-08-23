@@ -46,13 +46,15 @@ if ( ! function_exists( '\SilverWp\get_theme_option' ) ) {
 	 *
 	 * @param string $option_name
 	 *
+	 * @param bool   $to_array
+	 *
 	 * @return string
 	 * @access public
 	 * @author Marcin Dobroszek <marcin at silversite.pl>
-	 * @since 0.2
+	 * @since  0.2
 	 */
-	function get_theme_option( $option_name ) {
-		return Option::get_theme_option( $option_name );
+	function get_theme_option( $option_name, $to_array = false ) {
+		return Option::get_theme_option( $option_name, $to_array );
 	}
 }
 
