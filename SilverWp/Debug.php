@@ -52,7 +52,9 @@ if ( ! class_exists( 'SilverWp\Debug' ) ) {
          * @static
          */
         public static function dump( $variable, $label = null ) {
-	        if ( in_array( $_SERVER['REMOTE_ADDR'], self::$allowed_ips ) ) {
+	        if ( in_array( $_SERVER['REMOTE_ADDR'], self::$allowed_ips )
+	             || WP_ENV == 'development'
+	        ) {
 		        if ( ! is_null( $label ) ) {
 	                echo '<p><strong>' . $label . '</strong></p>';
 	            }
@@ -73,7 +75,9 @@ if ( ! class_exists( 'SilverWp\Debug' ) ) {
          * @access public
          */
         public static function dumpPrint( $variable, $label = null ) {
-	        if ( in_array( $_SERVER['REMOTE_ADDR'], self::$allowed_ips ) ) {
+	        if ( in_array( $_SERVER['REMOTE_ADDR'], self::$allowed_ips )
+	             || WP_ENV == 'development'
+	        ) {
 		        if ( ! is_null( $label ) ) {
 			        echo '<p><strong>' . $label . '</strong></p>';
 		        }

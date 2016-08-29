@@ -131,8 +131,10 @@ class Page {
 
 		if ( function_exists( 'icl_object_id' ) ) {
 			$page_id = icl_object_id( $page[0]->ID, 'page', true, ICL_LANGUAGE_CODE );
-		} else {
+		} elseif (isset($page[0])) {
 			$page_id = $page[0]->ID;
+		} else {
+			return false;
 		}
 
 		return $page_id;

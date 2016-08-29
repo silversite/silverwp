@@ -515,7 +515,7 @@ if ( ! class_exists( 'SilverWp\Db\Query' ) ) {
 		 */
 		public function isThumbnail() {
 			$post_id = $this->getPostId();
-			if ( in_array( 'thumbnail', $this->post_type->getSupport() )
+			if ( in_array( 'thumbnail', $this->post_type->getSupports() )
 			     && \has_post_thumbnail( $post_id )
 			) {
 				return true;
@@ -532,7 +532,7 @@ if ( ! class_exists( 'SilverWp\Db\Query' ) ) {
 		 * @since 0.3
 		 */
 		public function isDescription() {
-			$editor = \in_array( 'editor', $this->post_type->getSupport() );
+			$editor = \in_array( 'editor', $this->post_type->getSupports() );
 
 			return $editor;
 		}
@@ -545,7 +545,7 @@ if ( ! class_exists( 'SilverWp\Db\Query' ) ) {
 		 * @since 0.3
 		 */
 		public function isTitle() {
-			$is_title = \in_array( 'title', $this->post_type->getSupport() );
+			$is_title = \in_array( 'title', $this->post_type->getSupports() );
 
 			return $is_title;
 		}
